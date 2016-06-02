@@ -1,0 +1,79 @@
+.ui.menu .item i.marginless.icon {
+  margin: 0;
+}
+
+.card .extra.content .rating {
+  text-align: center;
+}
+
+.collapsed.search {
+  opacity: 0%;
+  visibility: hidden;
+}
+
+.quantity.add,
+.quantity.minus {
+  margin: 0;
+}
+
+span.quantity {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+span.quantity::after {
+  content: attr(data-quantity);
+}
+
+span.price.subtotal::after {
+  content: attr(data-price-subtotal);
+}
+
+span.price.total::after {
+  content: attr(data-price-total);
+}
+
+span.price.per.item::after {
+  content: attr(data-price-per-item);
+}
+
+span.dollar.unit::after {
+  content: "$";
+}
+
+span.quantity.per.item::after {
+  content: attr(data-quantity-per-item);
+}
+
+span.gram.unit::after {
+  content: "公克";
+}
+
+span.bar.unit::after {
+  content: "條";
+}
+
+span.price.quantity.separator::after {
+  content: "／";
+}
+
+span.unit,
+span.price,
+span.quantity.per.item {
+  margin-right: 0em !important;
+  margin-left: 0em;
+}
+
+.ui.xsmall.modal {
+  width: 240px;
+  margin: 0em 0em 0em -120px;
+}
+
+.ui.modal .centered.header,
+.ui.modal .centered.content {
+  text-align: center;
+}
+
+body .ui.container {
+  padding-bottom: 2rem;
+}
