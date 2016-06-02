@@ -1,4 +1,4 @@
-.ui.menu .item i.marginless.icon {
+﻿.ui.menu .item i.marginless.icon {
   margin: 0;
 }
 
@@ -75,5 +75,5 @@ span.quantity.per.item {
 }
 
 body .ui.container {
-  padding-bottom: 2rem;
+  padding-bottom: 3rem;
 }
