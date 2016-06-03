@@ -2,113 +2,178 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>阿寯的美食天地</title>
-  <link rel="stylesheet" type="text/css" href="dist/semantic.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link rel="stylesheet" type="text/css" href="styles/glide.core.css">
-  <link rel="stylesheet" type="text/css" href="styles/glide.theme.css">
+    <meta charset="utf-8">
+    <title>阿寯的美食天地</title>
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/glide.core.css">
+    <link rel="stylesheet" type="text/css" href="styles/glide.theme.css">
 
-  <script src="jquery-2.2.2.js"></script>
-  <script src="dist/semantic.js"></script>
-  <script src="script.js"></script>
-  <script src="scripts/glide.js"></script>
+    <script src="scripts/jquery-2.2.2.js"></script>
+    <script src="semantic/semantic.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/glide.js"></script>
 
-  <script>
-    $(function() {
-      $("#Glide").glide({
-        type: "carousel"
-      })
-    })
-  </script>
+    <script>
+        $(function () {
+            $("#Glide").glide({
+                type: "carousel"
+            })
+
+            $("#user-rating").rating({
+                initialRating: 3,
+                onRate: function (rating) {
+                    $("#rating").val(rating);
+                }
+            })
+        })
+    </script>
 </head>
 
 <body>
-  <br>
-  <div class="ui container" style="padding-bottom: 2rem;">
+<br>
+<div class="ui container" style="padding-bottom: 2rem;">
     <div class="ui large menu" style="margin-bottom: 2rem;">
-      <a class="active item">阿寯的美食天地</a>
-      <div class="right menu">
-        <div class="collapsed search item">
-          <div class="ui icon input">
-            <input type="text" placeholder="關鍵字">
-            <i class="search link icon"></i>
-          </div>
+        <a class="active item">阿寯的美食天地</a>
+        <div class="right menu">
+            <div class="collapsed search item">
+                <div class="ui icon input">
+                    <input type="text" placeholder="關鍵字">
+                    <i class="search link icon"></i>
+                </div>
+            </div>
+            <a class="search trigger ui item"><i class="search link marginless icon"></i></a>
+            <a id="login-modal-show" class="ui item">登入</a>
+            <a id="cart-modal-show" class="ui item">購物車</a>
         </div>
-        <a class="search trigger ui item"><i class="search link marginless icon"></i></a>
-        <a id="login-modal-show" class="ui item">登入</a>
-        <a id="cart-modal-show" class="ui item">購物車</a>
-      </div>
+    </div>
+    <div class="ui breadcrumb">
+        <a class="section">總覽</a>
+        <i class="right angle icon divider"></i>
+        <a class="section">生鮮食品</a>
+        <i class="right angle icon divider"></i>
+        <div class="active section">蔬菜</div>
     </div>
     <!-- Product -->
-    <div>
-      <div class="ui items">
+    <div class="ui items">
         <div class="item">
-          <a class="ui image">
-            <img src="images/001.jpg">
-          </a>
-          <div class="middle aligned content">
-            <h1 class="ui header">大陸 A 菜</h1>
-            <div class="meta">
-              <div class="recent" style="display: inline-block;">
-                <i class="users icon"></i> 近三天內有 643 人購買
-              </div>
-              <span class="price quantity separator"></span>
-              <div class="rating" style="display: inline-block;">
-                <div class="ui star rating" data-rating="5" data-max-rating="5"></div>
-              </div>
+            <a class="ui image">
+                <img src="images/001.jpg">
+            </a>
+            <div class="middle aligned content">
+                <h1 class="ui header">大陸 A 菜</h1>
+                <div class="meta">
+                    <div class="recent" style="display: inline-block;">
+                        <i class="users icon"></i> 近三天內有 643 人購買
+                    </div>
+                    <span class="price quantity separator"></span>
+                    <div class="rating" style="display: inline-block;">
+                        <div class="ui star rating" data-rating="5" data-max-rating="5"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    <p>福山萵苣，在臺灣俗稱大陸妹、妹仔菜或是大陸萵菜，是一種萵苣屬蔬菜。</p>
+                </div>
+                <div class="extra">
+                    <div class="ui blue add to cart button">
+                        <i class="add icon"></i> 加入購物車
+                    </div>
+                </div>
             </div>
-            <div class="description">
-              <p>福山萵苣，在臺灣俗稱大陸妹、妹仔菜或是大陸萵菜，是一種萵苣屬蔬菜。</p>
+            <div class="ui right floated large statistics">
+                <div class="ui horizontal green statistic">
+                    <div class="label">
+                        <span data-quantity-per-item="250" class="quantity per item"></span>
+                        <span class="gram unit" style="padding-right: 1em; "></span>
+                    </div>
+                    <div class="value">
+                        <span data-price-per-item="27" class="price per item"></span>
+                        <span class="dollar unit"></span>
+                    </div>
+                </div>
             </div>
-            <div class="extra">
-              <div class="ui blue add to cart button">
-                <i class="add icon"></i> 加入購物車
-              </div>
-            </div>
-          </div>
-          <div class="ui right floated large statistics">
-            <div class="ui horizontal green statistic">
-              <div class="label">
-                <span data-quantity-per-item="250" class="quantity per item"></span>
-                <span class="gram unit" style="padding-right: 1em; "></span>
-              </div>
-              <div class="value">
-                <span data-price-per-item="27" class="price per item"></span>
-                <span class="dollar unit"></span>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      <div id="image-carousel">
+    </div>
+    <div id="image-carousel">
         <div id="Glide" class="glide">
 
-          <div class="glide__arrows">
-            <button class="ui inverted blue circular icon button glide__arrow large prev" data-glide-dir="<"><i class="chevron left icon"></i></button>
-            <button class="ui inverted blue circular icon button glide__arrow large next" data-glide-dir=">"><i class="chevron right icon" style="margin: 0;"></i></button>
-          </div>
-
-          <div class="glide__wrapper">
-            <div class="glide__track">
-              <img class="glide__slide" src="images/index-carousel/1.jpg" />
-              <img class="glide__slide" src="images/index-carousel/2.jpg" />
-              <img class="glide__slide" src="images/index-carousel/3.jpg" />
-              <img class="glide__slide" src="images/index-carousel/4.jpg" />
-              <img class="glide__slide" src="images/index-carousel/5.jpg" />
+            <div class="glide__arrows">
+                <button class="ui inverted blue circular icon button glide__arrow large prev" data-glide-dir="<"><i
+                        class="chevron left icon"></i></button>
+                <button class="ui inverted blue circular icon button glide__arrow large next" data-glide-dir=">"><i
+                        class="chevron right icon" style="margin: 0;"></i></button>
             </div>
-          </div>
 
-          <div class="glide__bullets"></div>
+            <div class="glide__wrapper">
+                <div class="glide__track">
+                    <img class="glide__slide" src="images/index-carousel/1.jpg"/>
+                    <img class="glide__slide" src="images/index-carousel/2.jpg"/>
+                    <img class="glide__slide" src="images/index-carousel/3.jpg"/>
+                    <img class="glide__slide" src="images/index-carousel/4.jpg"/>
+                    <img class="glide__slide" src="images/index-carousel/5.jpg"/>
+                </div>
+            </div>
+
+            <div class="glide__bullets"></div>
         </div>
-      </div>
-      <div class="ui segment">
-        <p>在中國北京當地俗稱「蒿仔杆」屬於萵菜類中的嫩葉萵苣，是中國大陸北京地區吃火鍋或涮羊肉時相當受歡迎的配菜。 此菜因與臺灣人熟知的臺灣萵菜（A菜）相近，早期農民稱之為「大陸A菜」，而後民眾誤傳為「大陸妹」。 依據台北農產運銷公司有關人員表示，1999年之前南臺灣農民私下將此菜由中國大陸引進臺灣栽種，初上市時，許多臺灣消費者不知此菜原名，有些人以其葉片色澤翠綠，又油油亮亮，質感脆嫩，又聽聞此菜品種來自中國大陸，因此菜名流傳「大陸妹」的俗稱。客家話則有「妹仔菜」的對映語。</p>
-        <p>在臺灣市場上的蔬菜「大陸妹」（福山萵苣的俗稱）並不是從大陸進口，而是在臺灣本地栽種，全年皆生產。2001年在臺灣南部已是相當普遍的家庭蔬菜，而主要栽培區在以臺灣葉菜類主產區的雲林縣二崙、西螺地區，每天市場交易量約2至3公噸左右。</p>
-        <p>除了「大陸妹」的俗稱之外，但該公司曾將此新興蔬菜定名「油麥菜」。不過，「油麥菜」的名在香港、澳門反而指的是台灣俗稱「A菜」的臺灣萵菜。 一般傳統萵菜常拿來當海鮮的墊底裝飾，口感不佳，故並不加以食用。此菜（「大陸妹」）是改良過的萵菜，有翠綠的大葉片和甜脆的口感，所以很受到大家的喜愛。加上不容易變色的特質和價錢便宜，也是臺灣火鍋店或小吃店中的明星青菜之一。</p>
-      </div>
     </div>
-  </div>
+    <div style="display: flex; align-items: stretch; margin-top: 3rem; ">
+        <div style="width: 40rem;" class="ui very padded segment">
+            <p>在中國北京當地俗稱「蒿仔杆」屬於萵菜類中的嫩葉萵苣，是中國大陸北京地區吃火鍋或涮羊肉時相當受歡迎的配菜。 此菜因與臺灣人熟知的臺灣萵菜（A菜）相近，早期農民稱之為「大陸A菜」，而後民眾誤傳為「大陸妹」。
+                依據台北農產運銷公司有關人員表示，1999年之前南臺灣農民私下將此菜由中國大陸引進臺灣栽種，初上市時，許多臺灣消費者不知此菜原名，有些人以其葉片色澤翠綠，又油油亮亮，質感脆嫩，又聽聞此菜品種來自中國大陸，因此菜名流傳「大陸妹」的俗稱。客家話則有「妹仔菜」的對映語。</p>
+            <p>
+                在臺灣市場上的蔬菜「大陸妹」（福山萵苣的俗稱）並不是從大陸進口，而是在臺灣本地栽種，全年皆生產。2001年在臺灣南部已是相當普遍的家庭蔬菜，而主要栽培區在以臺灣葉菜類主產區的雲林縣二崙、西螺地區，每天市場交易量約2至3公噸左右。</p>
+            <p>除了「大陸妹」的俗稱之外，但該公司曾將此新興蔬菜定名「油麥菜」。不過，「油麥菜」的名在香港、澳門反而指的是台灣俗稱「A菜」的臺灣萵菜。
+                一般傳統萵菜常拿來當海鮮的墊底裝飾，口感不佳，故並不加以食用。此菜（「大陸妹」）是改良過的萵菜，有翠綠的大葉片和甜脆的口感，所以很受到大家的喜愛。加上不容易變色的特質和價錢便宜，也是臺灣火鍋店或小吃店中的明星青菜之一。</p>
+        </div>
+        <div style="padding-left: 2rem; flex-grow: 1; margin: 0;" class="ui comments">
+            <h2 class="ui teal header">評論</h2>
+            <div class="comment">
+                <div class="content">
+                    <a class="author">徐鵬鈞</a>
+                    <div class="metadata">
+                        <div class="rating" style="display: inline-block;">
+                            <div class="ui star rating" data-rating="3" data-max-rating="5"></div>
+                        </div>
+                        <div class="date">5 月 30 日</div>
+                    </div>
+                    <div class="text">
+                        <p>還不錯吃。</p>
+                        <p>可以再更新鮮。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="comment">
+                <div class="content">
+                    <a class="author">王詳寯</a>
+                    <div class="metadata">
+                        <div class="rating" style="display: inline-block;">
+                            <div class="ui star rating" data-rating="5" data-max-rating="5"></div>
+                        </div>
+                        <div class="date">5 月 30 日</div>
+                    </div>
+                    <div class="text">
+                        <p>幹你娘吃爆。</p>
+                    </div>
+                </div>
+            </div>
+            <form class="ui reply form">
+                <div class="field">
+                    <textarea name="comment" id="comment"></textarea>
+                </div>
+                <div class="field">
+                    <input type="hidden" name="rating" id="rating"/>
+                </div>
+                <div class="field rating" style="display: inline-block;">
+                    <div id="user-rating" class="ui star rating" data-max-rating="5"></div>
+                </div>
+                <div class="ui primary submit right floated labeled icon button">
+                    <i class="icon edit"></i> 評論
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>

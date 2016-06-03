@@ -3,17 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>阿寯的美食天地</title>
-    <link rel="stylesheet" type="text/css" href="dist/semantic.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="jquery-2.2.2.js"></script>
-    <script src="dist/semantic.js"></script>
-    <script src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script src="scripts/jquery-2.2.2.js"></script>
+    <script src="semantic/semantic.js"></script>
+    <script src="scripts/script.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- 表單驗證 -->
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
-    <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/localization/messages_zh_TW.js "></script>
 
     <script>
         var debug = true;
@@ -22,7 +17,6 @@
         console.warn("測試中：已啟用測試功能，將自動填寫表單預設值，方便測試。")
         
         $.fn.form.settings.rules.validPassword = function(value) {
-            console.log(value);
             var set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
             for (var x of value) {
                 if (set.indexOf(x) < 0) return false
