@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <title>阿寯的美食天地</title>
-  <link rel="stylesheet" type="text/css" href="dist/semantic.css">
-  <link rel="stylesheet" type="text/css" href="glide/css/glide.core.css">
-  <link rel="stylesheet" type="text/css" href="glide/css/glide.theme.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="jquery-2.2.2.js"></script>
-  <script src="dist/semantic.js"></script>
-  <script src="script.js"></script>
-  <script src="glide/glide.js"></script>
+  <link rel="stylesheet" type="text/css" href="semantic/semantic.css">
+  <link rel="stylesheet" type="text/css" href="styles/glide.core.css">
+  <link rel="stylesheet" type="text/css" href="styles/glide.theme.css">
+  <link rel="stylesheet" type="text/css" href="styles/style.css">
+  <script src="scripts/jquery-2.2.2.js"></script>
+  <script src="semantic/semantic.js"></script>
+  <script src="scripts/script.js"></script>
+  <script src="scripts/glide.js"></script>
 
   <script>
     $(function() {
@@ -84,65 +84,9 @@
     </div>
 
     <div style="display: flex; align-items: stretch; margin-top: 2rem;">
-      <div class="ui vertical menu" style="max-width: 30rem;">
-        <a class="item">
-          特惠專區
-        </a>
-        <div class="item">
-          <div class="header">生鮮專區</div>
-          <div class="menu">
-            <a class="item">蔬菜</a>
-            <a class="item">水果</a>
-            <a class="item">肉品</a>
-            <a class="item">海鮮</a>
-            <a class="item">乳製品</a>
-          </div>
-        </div>
-        <div class="item">
-          <div class="header">加工食品</div>
-          <div class="menu">
-            <a class="item">油品</a>
-            <a class="item">甜點</a>
-            <a class="item">零食</a>
-            <a class="item">飲品</a>
-          </div>
-        </div>
-        <div class="item">
-          <div class="header">世界美食</div>
-          <div class="menu">
-            <div class="ui dropdown item">
-              <i class="dropdown icon"></i> 亞洲
-              <div class="menu">
-                <a class="item">日本</a>
-                <a class="item">南韓</a>
-              </div>
-            </div>
-            <div class="ui dropdown item">
-              <i class="dropdown icon"></i> 歐洲
-              <div class="menu">
-                <a class="item">美國</a>
-                <a class="item">法國</a>
-                <a class="item">義大利</a>
-              </div>
-            </div>
-            <div class="ui dropdown item">
-              <i class="dropdown icon"></i> 美洲
-              <div class="menu">
-                <a class="item">美國</a>
-                <a class="item">加拿大</a>
-                <a class="item">墨西哥</a>
-              </div>
-            </div>
-            <div class="ui dropdown item">
-              <i class="dropdown icon"></i> 其他
-              <div class="menu">
-                <a class="item">澳洲</a>
-                <a class="item">紐西蘭</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php
+      include "util/nested_menu.php";
+      ?>
 
       <div class="ui piled segments" style="margin: 0 0 0 3rem; flex-grow: 1;">
         <div class="ui very padded red raised segment">
@@ -204,8 +148,8 @@
         <div class="ui very padded blue segment">
           <h2 class="ui blue header">公告</h2>
             <div class="ui relaxed divided list">
-              <?
-                include("connect.php");
+              <?php
+                include("util/connect.php");
 
                 $result = $mysqli -> query("select * from posts");
                 $total = mysqli_num_rows($result);
@@ -218,7 +162,7 @@
                               </div>
                             </div>";
                 }
-                include("close.php");
+                include("util/close.php");
               ?>
             </div>
         </div>
