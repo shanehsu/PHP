@@ -49,7 +49,7 @@ if($username != "" || $password != ""){
     mysqli_close($link); // 關閉資料庫連結
     
 
-    if($_POST['adminLoggedin'] == true){
+    if($_SESSION['adminLoggedin'] == true){
         header('Location:http://localhost/admin/index.html');
         
     }
