@@ -126,24 +126,14 @@
     </div>
     <div style="display: flex; align-items: stretch; margin-top: 3rem; ">
         <?php         
-            $ary = str_split($row[6]);
+            $ary = explode("\n", $row[6]);
             $i = 0;
             echo "<div style=\"width: 40rem;\" class=\"ui very padded segment\"><p>";
-            while($ary[$i] != null)
-            {
-                
-                if($ary[$i] == "\n")
-                {   
-                    
-                    echo "<p></p>";
-                    $i++;
-                }
-                else
-                {
-                    echo " ".$i." ";
-                    echo "$ary[i]";
-                    $i++;
-                }
+
+            while ($ary[$i] != null) {
+                echo $ary[$i];
+                echo "<p></p>";
+                $i++;
             }
             echo "</div>";
             include("close.php");
