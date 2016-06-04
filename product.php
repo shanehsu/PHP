@@ -67,8 +67,9 @@
                     if (isset($_GET['id']))
                     {
                         $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
-                    }                  
-                    echo "<h1 class=\"ui header\">". $result[1] ."</h1>
+                    } 
+                    $row = mysqli_fetch_row($result);              
+                    echo "<h1 class=\"ui header\">". $row[1] ."</h1>
                             <div class=\"meta\">
                                 <div class=\"recent\" style=\"display: inline-block;\">
                                     <i class=\"users icon\"></i>共有XXX人購買
@@ -78,7 +79,7 @@
                                     <div class=\"ui star rating\" data-rating=\"5\" data-max-rating=\"5\"></div>
                                 </div>
                             </div>
-                        <div class=\"description\"><p>". $result[5] ."</p></div>";               
+                        <div class=\"description\"><p>". $row[5] ."</p></div>";               
                 ?>
                 <div class="extra">
                     <div class="ui blue add to cart button">
@@ -125,19 +126,22 @@
     </div>
     <div style="display: flex; align-items: stretch; margin-top: 3rem; ">
         <?php         
-            $ary = str_split($result[6]);
+            $ary = str_split($row[6]);
             $i = 0;
             echo "<div style=\"width: 40rem;\" class=\"ui very padded segment\"><p>";
             while($ary[$i] != null)
             {
-                if($ary[i] == "\n")
-                {
+                
+                if($ary[$i] == "\n")
+                {   
+                    
                     echo "<p></p>";
                     $i++;
                 }
                 else
                 {
-                    echo $ary;
+                    echo " ".$i." ";
+                    echo "$ary[i]";
                     $i++;
                 }
             }
