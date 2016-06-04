@@ -29,7 +29,7 @@
             登入
           </div>
         </h2>
-        <form class="ui large form" action="register_finish.php" method = "POST">
+        <form class="ui large form" action="_connect.php" method = "POST">
           <div class="ui raised segment">
             <div class="field">
               <div class="ui left icon input">
