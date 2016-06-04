@@ -21,26 +21,11 @@
     })
   </script>
   <style>
-    .glide__track {
-      display: block;
-      position: relative;
-    }
-    
-    .glide__track:before {
-      display: block;
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      -moz-box-shadow: inset 0px 0px 3px 1px rgba(0, 0, 0, 1);
-      -webkit-box-shadow: inset 0px 0px 3px 1px rgba(0, 0, 0, 1);
-      box-shadow: inset 0px 0px 20px 25px white;
-    }
+
   </style>
 </head>
 
 <body>
-  <br>
   <div class="ui container">
     <div class="ui large menu">
       <a class="active item">阿寯的美食天地</a>

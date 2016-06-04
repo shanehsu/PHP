@@ -10,7 +10,6 @@
   <script src="scripts/script.js"></script>
 </head>
 <body>
-  <br>
   <div class="ui container" style="padding-bottom: 2rem;">
     <div class="ui large menu">
       <a class="active item">阿寯的美食天地</a>
@@ -32,49 +31,6 @@
         <?php
           include 'util/flat_menu.php';
         ?>
-<!--        <div class="ui fluid secondary vertical menu">-->
-<!--          <a class="active item">特惠專區</a>-->
-<!--          <a class="item">生鮮食品</a>-->
-<!--          <a class="item">加工食品</a>-->
-<!--          <a id="world-popup-toggle" class="browse item">-->
-<!--            世界美食特區-->
-<!--            <i class="dropdown icon"></i>-->
-<!--          </a>-->
-<!--          <div id="world-popup" class="ui flowing popup bottom left transition hidden" style="min-width: 30em;">-->
-<!--            <div class="ui four column relaxed equal height divided grid">-->
-<!--              <div class="column">-->
-<!--                <h4 class="ui header">亞洲</h4>-->
-<!--                <div class="ui link list">-->
-<!--                  <a class="item">日本</a>-->
-<!--                  <a class="item">南韓</a>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="column">-->
-<!--                <h4 class="ui header">歐洲</h4>-->
-<!--                <div class="ui link list">-->
-<!--                  <a class="item">英國</a>-->
-<!--                  <a class="item">法國</a>-->
-<!--                  <a class="item">義大利</a>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="column">-->
-<!--                <h4 class="ui header">美洲</h4>-->
-<!--                <div class="ui link list">-->
-<!--                  <a class="item">美國</a>-->
-<!--                  <a class="item">加拿大</a>-->
-<!--                  <a class="item">墨西哥</a>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="column">-->
-<!--                <h4 class="ui header">其他</h4>-->
-<!--                <div class="ui link list">-->
-<!--                  <a class="item">澳洲</a>-->
-<!--                  <a class="item">紐西蘭</a>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
       
       <div class="thirteen wide column">
