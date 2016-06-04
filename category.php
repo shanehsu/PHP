@@ -81,7 +81,7 @@
 
             if (isset($_GET['id']))
             {
-              $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
+              $result = $mysqli -> query("select * from products where categories = " . intval($_GET['id']));
             }
             $total = mysqli_num_rows($result);
             for($i = 0; $i < $total; $i++) {
