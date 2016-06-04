@@ -15,7 +15,7 @@ $password = $_POST['password'];
 
 
 if($username != "" || $password != ""){
-    $link = mysqli_connect("localhost","root","wang0611","group_12")// 建立MySQL的資料庫連結
+    $link = mysqli_connect("php.caituglxwkil.ap-northeast-1.rds.amazonaws.com","root","12345678","group_12")// 建立MySQL的資料庫連結
     or die("無法開啟MySQL資料庫連結!<br>");
     mysqli_query($link,"SET CHARACTER SET UTF8");
             mysqli_query($link,"SET collation_connection = 'utf8_unicode_ci'");
@@ -36,13 +36,13 @@ if($username != "" || $password != ""){
             }
             else if($row['pwd'] != $pwd){
                 
-               header('Location:http://localhost/admin/login.php');
+               header('Location:admin/login.php');
                
             }
         }
         else $login = 3;
         //account doesn't exist
-        header('Location:http://localhost/admin/login.php');
+        header('Location:admin/login.php');
         mysqli_free_result($result); // 釋放佔用的記憶體 
     }
 
@@ -50,7 +50,7 @@ if($username != "" || $password != ""){
     
 
     if($_SESSION['adminLoggedin'] == true){
-        header('Location:http://localhost/admin/index.html');
+        header('Location:index.php');
         
     }
 
