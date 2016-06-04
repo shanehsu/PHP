@@ -18,10 +18,6 @@
       $("#Glide").glide({
         type: "carousel"
       });
-      $('.ui.dropdown').dropdown({
-        on: 'hover',
-        // position : 'bottom left'
-      })
     })
   </script>
   <style>

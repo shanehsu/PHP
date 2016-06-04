@@ -30,11 +30,21 @@ $(function() {
   })
 
   // 事件
-  $('#world-popup-toggle').popup({
-    inline: true,
-    hoverable: true,
-    position : 'bottom left'
-  })
+    $('.multiple.dropdown.toggle').popup({
+        inline: true,
+        hoverable: true,
+        position : 'bottom left'
+    })
+    $('.dropdown.toggle:not(.multiple)').popup({
+        inline: true,
+        hoverable: true,
+        position : 'bottom right'
+    })
+    $('.ui.dropdown').dropdown({
+        on: 'hover',
+        // position : 'bottom left'
+    })
+
   $('#login-modal-show').click(function() {
     $('#login-modal').modal('show')
   })

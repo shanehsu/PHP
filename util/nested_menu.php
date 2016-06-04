@@ -79,7 +79,6 @@ include("close.php");
     </a>
     <?php
     foreach ($categories as $category) {
-        // print_r($category);
         switch ($category["depth"]) {
             case 1:
                 ?>

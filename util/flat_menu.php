@@ -73,28 +73,36 @@ include("close.php");
 ?>
 </pre>
 
-<div class="ui vertical menu" style="max-width: 30rem;">
+<?php
+$column_style_classes = array(
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight"
+);
+?>
+
+<div class="ui secondary vertical menu" style="max-width: 30rem;">
     <a class="item">
         特惠專區
     </a>
     <?php
     foreach ($categories as $category) {
-        // print_r($category);
         switch ($category["depth"]) {
             case 1:
                 ?>
-                <a class="item"><?php echo $category["name"]; ?></a>
+                <a href="category.php?id=<?php echo $category["id"]; ?>" class="item"><?php echo $category["name"]; ?></a>
                 <?php
                 break;
             case 2:
                 ?>
-                <div class="item">
-                    <div class="header"><?php echo $category["name"]; ?></div>
-                    <div class="menu">
+                <a class="dropdown toggle browse item">
+                    <?php echo $category["name"]; ?>
+                    <i class="dropdown icon"></i>
+                </a>
+                <div class="ui flowing popup bottom left transition hidden">
+                    <div class="">
                         <?php
                         foreach ($category["children"] as $child) {
                             ?>
-                            <a class="item"><?php echo $child["name"]; ?></a>
+                            <a href="category.php?id=<?php echo $child["id"]; ?>" class="item"><?php echo $child["name"]; ?></a>
                             <?php
                         }
                         ?>
@@ -104,15 +112,18 @@ include("close.php");
                 break;
             case 3:
                 ?>
-                <div class="item">
-                    <div class="header"><?php echo $category["name"]; ?></div>
-                    <div class="menu">
+                <a class="multiple dropdown toggle browse item">
+                    <?php echo $category["name"]; ?>
+                    <i class="dropdown icon"></i>
+                </a>
+                <div class="ui flowing popup bottom left transition hidden" style="min-width: 30em;">
+                    <div class="ui <?php echo $column_style_classes[count($category["children"])]; ?> column relaxed equal height divided grid">
                         <?php
                         foreach ($category["children"] as $child) {
                             ?>
-                            <div class="ui dropdown item">
-                                <i class="dropdown icon"></i> <?php echo $child["name"]; ?>
-                                <div class="menu">
+                            <div class="column">
+                                <h4 class="ui header"><?php echo $child["name"]; ?></h4>
+                                <div class="ui link list">
                                     <?php
                                     foreach ($child["children"] as $grandchild) {
                                         ?>
@@ -125,6 +136,7 @@ include("close.php");
                             <?php
                         }
                         ?>
+
                     </div>
                 </div>
                 <?php
@@ -135,109 +147,3 @@ include("close.php");
     }
     ?>
 </div>
-
-<div class="ui fluid secondary vertical menu">
-    <a class="active item">特惠專區</a>
-    <a class="item">生鮮食品</a>
-    <a class="item">加工食品</a>
-    <a id="world-popup-toggle" class="browse item">
-        世界美食特區
-        <i class="dropdown icon"></i>
-    </a>
-    <div id="world-popup" class="ui flowing popup bottom left transition hidden" style="min-width: 30em;">
-        <div class="ui four column relaxed equal height divided grid">
-            <div class="column">
-                <h4 class="ui header">亞洲</h4>
-                <div class="ui link list">
-                    <a class="item">日本</a>
-                    <a class="item">南韓</a>
-                </div>
-            </div>
-            <div class="column">
-                <h4 class="ui header">歐洲</h4>
-                <div class="ui link list">
-                    <a class="item">英國</a>
-                    <a class="item">法國</a>
-                    <a class="item">義大利</a>
-                </div>
-            </div>
-            <div class="column">
-                <h4 class="ui header">美洲</h4>
-                <div class="ui link list">
-                    <a class="item">美國</a>
-                    <a class="item">加拿大</a>
-                    <a class="item">墨西哥</a>
-                </div>
-            </div>
-            <div class="column">
-                <h4 class="ui header">其他</h4>
-                <div class="ui link list">
-                    <a class="item">澳洲</a>
-                    <a class="item">紐西蘭</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--
-<div class="ui vertical menu" style="max-width: 30rem;">
-    <a class="item">
-        特惠專區
-    </a>
-    <div class="item">
-        <div class="header">生鮮專區</div>
-        <div class="menu">
-            <a class="item">蔬菜</a>
-            <a class="item">水果</a>
-            <a class="item">肉品</a>
-            <a class="item">海鮮</a>
-            <a class="item">乳製品</a>
-        </div>
-    </div>
-    <div class="item">
-        <div class="header">加工食品</div>
-        <div class="menu">
-            <a class="item">油品</a>
-            <a class="item">甜點</a>
-            <a class="item">零食</a>
-            <a class="item">飲品</a>
-        </div>
-    </div>
-    <div class="item">
-        <div class="header">世界美食</div>
-        <div class="menu">
-            <div class="ui dropdown item">
-                <i class="dropdown icon"></i> 亞洲
-                <div class="menu">
-                    <a class="item">日本</a>
-                    <a class="item">南韓</a>
-                </div>
-            </div>
-            <div class="ui dropdown item">
-                <i class="dropdown icon"></i> 歐洲
-                <div class="menu">
-                    <a class="item">美國</a>
-                    <a class="item">法國</a>
-                    <a class="item">義大利</a>
-                </div>
-            </div>
-            <div class="ui dropdown item">
-                <i class="dropdown icon"></i> 美洲
-                <div class="menu">
-                    <a class="item">美國</a>
-                    <a class="item">加拿大</a>
-                    <a class="item">墨西哥</a>
-                </div>
-            </div>
-            <div class="ui dropdown item">
-                <i class="dropdown icon"></i> 其他
-                <div class="menu">
-                    <a class="item">澳洲</a>
-                    <a class="item">紐西蘭</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
--->
