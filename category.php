@@ -78,7 +78,11 @@
         <div class="ui four doubling cards">
           <?php
             include("util/connect.php");
-            $result = $mysqli -> query("select * from products");
+
+            if (isset($_GET['id']))
+            {
+              $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
+            }
             $total = mysqli_num_rows($result);
             for($i = 0; $i < $total; $i++) {
                 $row = mysqli_fetch_row($result);
