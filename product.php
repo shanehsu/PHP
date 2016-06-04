@@ -57,8 +57,17 @@
     <!-- Product -->
     <div class="ui items">
         <div class="item">
+        <?php
+            include("connect.php");
+
+                    if (isset($_GET['id']))
+                    {
+                        $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
+                    } 
+                    $row = mysqli_fetch_row($result);
+        ?>
             <a class="ui image">
-                <img src="images/001.jpg">
+                <img src="<?php echo "images.php?id={$row[0]}" ?> ">
             </a>
             <div class="middle aligned content">
                 <?php 
