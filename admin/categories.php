@@ -8,6 +8,10 @@ $result = $mysqli->query("select * from categories where parent is null");
 $total = mysqli_num_rows($result);
 $categories = array();
 
+
+
+
+
 for ($i = 0; $i < $total; $i++) {
     $row = mysqli_fetch_row($result);
 
@@ -147,13 +151,48 @@ foreach ($categories as $category) {
     <!--
         因為這個按鈕部份，都是當沒有項目的時候才有，所以直接用 if 當沒子項目的時候顯示，
      -->
+
+
+<?
+$result2 = $mysqli->query("select * from products");
+$total2 = mysqli_num_rows($result2);
+
+$out = 1;
+
+for ($i = 0; $i < $total2; $i++) {
+$row2 = mysqli_fetch_row($result2);
+
+if($category["id"] == $row2[8])
+    {$out = 0;break;}
+
+}
+
+if($out == 1)
+{
+
+?>    
+
     <div class="ui bottom attached buttons">
         <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-        <div class="ui negative button" onclick="location.href='new_category.php'">刪除該類別</div>
+        <div class="ui negative button" onclick="location.href='<?echo "delete_categories.php?id=". $category["id"];?>'">刪除該類別</div>
         <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
         <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
     </div>
 <?
+}
+else 
+   {?>
+         <div class="ui bottom attached buttons">
+                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
+                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
+            </div>
+        <?}
+
+$out = 1;
+
+
 break;
 case 2:
     # code...
@@ -178,12 +217,43 @@ case 2:
                     <span style="float: right;">共有 5 項商品</span>
                 </p>
             </div>
+
+            <?
+            for ($i = 0; $i < $total2; $i++) {
+                $row2 = mysqli_fetch_row($result2);
+
+                    if($child["id"] == $row2[8])
+                        {$out = 0;break;}
+
+}
+
+if($out == 1)
+{
+            ?>
+
+
             <div class="ui bottom attached buttons">
                 <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                <div class="ui negative button" onclick="location.href='new_category.php'">刪除該類別</div>
+                <div class="ui negative button" onclick="location.href='<?echo "delete_categories.php?id=". $child["id"];?>'">刪除該類別</div>
                 <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
                 <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
             </div>
+
+            <?
+        }
+            else 
+    {?>
+         <div class="ui bottom attached buttons">
+                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
+                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
+            </div>
+        <?}
+
+$out = 1;
+
+            ?>
             
            
             </div>
@@ -232,12 +302,47 @@ case 2:
                         <span style="float: right;">共有 5 項商品</span>
                     </p>
                 </div>
+<?
+            for ($i = 0; $i < $total2; $i++) {
+                $row2 = mysqli_fetch_row($result2);
+
+                    if($grandchild["id"] == $row2[8])
+                        {$out = 0;break;}
+
+}
+
+if($out == 1)
+{
+            ?>
+
                 <div class="ui bottom attached buttons">
                     <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                    <div class="ui negative button" onclick="location.href='new_category.php'">刪除該類別</div>
+                    <div class="ui negative button" onclick="location.href='<?echo "delete_categories.php?id=". $grandchild["id"];?>'">刪除該類別</div>
                     <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
                     <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
                 </div>
+
+                <?
+        }
+            else 
+    {?>
+        <div class="ui bottom attached buttons">
+                    <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                    <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
+                    <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                    <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
+                </div>
+
+
+
+
+
+
+   <? }
+
+$out = 1;
+
+            ?>
                 
            
         </div>
