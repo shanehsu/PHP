@@ -166,7 +166,7 @@
             </div>
         </div>
         <div style="min-width: 30em; width: 50%; margin: 0 auto;">
-            <form class="ui form" role="form" id="form1" action="_register_finish.php" method="POST">
+            <form class="ui form" role="form" id="form1" action="_register.php" method="POST">
                 <h1>會員註冊</h1>
                 <div class="field">
                     <label>姓名</label>
