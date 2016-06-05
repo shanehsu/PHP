@@ -79,7 +79,7 @@ $column_style_classes = array(
 );
 ?>
 
-<div class="ui secondary vertical menu" style="max-width: 30rem;">
+<div class="ui secondary fluid vertical menu" style="max-width: 30rem;">
     <a class="item">
         特惠專區
     </a>
@@ -116,7 +116,7 @@ $column_style_classes = array(
                     <?php echo $category["name"]; ?>
                     <i class="dropdown icon"></i>
                 </a>
-                <div class="ui flowing popup bottom left transition hidden" style="min-width: 30em;">
+                <div class="ui flowing popup bottom left transition hidden" style="min-width: <?php echo count($category["children"]) * 8;?>em;">
                     <div class="ui <?php echo $column_style_classes[count($category["children"])]; ?> column relaxed equal height divided grid">
                         <?php
                         foreach ($category["children"] as $child) {
