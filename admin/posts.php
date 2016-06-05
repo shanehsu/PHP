@@ -24,7 +24,7 @@
     </div>
     <h1 class="ui teal header">
         公告
-        <div class="ui right floated positive button"><a href="http://localhost/admin/new_post">新增</a></div>
+        <div class="ui right floated positive button"><a href="new_post.php">新增</a></div>
     </h1>
     <div class="ui items">
         <?php
@@ -46,8 +46,8 @@
                 </a>
                 <div class="extra">
                     <div class="ui right floated buttons">
-                        <div class="ui button"><a href="http://localhost/admin/edit_post">編輯</a></div>
-                        <div class="ui negative button">刪除</div>
+                        <div class="ui button"><a href="<?php echo "edit_post.php?id=$row[0]" ?>">編輯</a></div>
+                        <div class="ui negative button"><a href="<?php echo "delete_post.php?id=$row[0]" ?>">刪除</a></div>
                     </div>
                 </div>
             </div> 
