@@ -13,15 +13,10 @@
 </head>
 <body>
 <div class="ui container">
-    <div class="ui seven item menu">
-        <a class="active item">公告</a>
-        <a class="item">靜態圖片</a>
-        <a class="item">首頁輪播</a>
-        <a class="item">分類</a>
-        <a class="item">產品</a>
-        <a class="item">會員</a>
-        <a class="item">管理者</a>
-    </div>
+    <?php
+    include 'navigation.php';
+    ?>
+
     <h1 class="ui teal header">
         公告
         <div class="ui right floated positive button"><a href="http://localhost/admin/new_post">新增</a></div>
