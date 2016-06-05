@@ -15,10 +15,7 @@ $name = $_POST["name"];
 $address = $_POST["address"];
 
 if($email != "" || $password != ""){
-    $link = mysqli_connect("php.caituglxwkil.ap-northeast-1.rds.amazonaws.com","root","12345678","group_12")// 建立MySQL的資料庫連結
-    or die("無法開啟MySQL資料庫連結!<br>");
-    mysqli_query($link,"SET CHARACTER SET UTF8");
-            mysqli_query($link,"SET collation_connection = 'utf8_unicode_ci'");
+    include("util/connect.php")
         }
 
     //$sql = "SELECT * FROM member where Email='$email' ";
