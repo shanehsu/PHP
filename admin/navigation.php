@@ -18,6 +18,10 @@ $_ADMIN_NAVIGATION_CONFIGURATION = array(
     array(
         'name' => '分類',
         'href' => 'categories'
+    ),
+    array(
+        'name' => '產品',
+        'href' => 'products'
     )
 );
 
@@ -27,9 +31,7 @@ $ANC = count($_ADMIN_NAVIGATION_CONFIGURATION);
 /*
  * 其實還有這些
  *
- * - 靜態圖片
  * - 首頁輪播
- * - 分類
  * - 產品
  * - 訂單
  * - 會員
