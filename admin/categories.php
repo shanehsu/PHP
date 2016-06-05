@@ -35,6 +35,7 @@
 
         /* 增加階層的感覺 */
         .ui.segments > .segment + .segments:not(.horizontal) {
+            margin-right: -1px;
             margin-left: 3em;
         }
     </style>
