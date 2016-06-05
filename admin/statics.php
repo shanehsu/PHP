@@ -40,27 +40,45 @@
             </tr>
         </thead>
         <tbody>
+        <?php
+            include("connect.php");
+            $result = $mysqli -> query("select * from images");
+            $total = mysqli_num_rows($result);
+            for($i = 0; $i < $total; $i++) {
+                $row = mysqli_fetch_row($result);
+        ?>
         <tr>
             <td style="text-align: center;">
-                <p>1</p>
+                <?php
+                    echo $row[0];
+                ?>
             </td>
             <td>
-                <img style="max-height: 6em; max-width: 6em;" src="/images.php?id=1">
+                <img style="max-height: 6em; max-width: 6em;" src="<?php echo "/images.php?id={$row[0]}" ?>">
             </td>
             <td class="single line">
-                <p>高麗菜.jpg</p>
+                <?php
+                    echo $row[1];
+                ?>
             </td>
             <td>
-                <p>ksl329cns8.jpg</p>
+                <?php
+                    echo $row[2];
+                ?>
             </td>
             <td class="center aligned">
-                <a>刪除</a>
+                <a href="<?php echo "delete_img.php?id=$row[0]" ?>">刪除</a>
             </td>
+        </tr>
+        <?php
+            }
+            include("close.php");
+        ?>
         </tbody>
         <tfoot class="full-width">
         <tr>
             <th class="right aligned" colspan="5">
-                <a>上傳</a>
+                <a href="upload_file.php">上傳</a>
             </th>
         </tr>
         </tfoot>
