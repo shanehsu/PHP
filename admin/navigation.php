@@ -14,6 +14,10 @@ $_ADMIN_NAVIGATION_CONFIGURATION = array(
     array(
         'name' => '靜態圖片',
         'href' => 'statics'
+    ),
+    array(
+        'name' => '分類',
+        'href' => 'categories'
     )
 );
 
