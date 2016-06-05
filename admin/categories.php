@@ -245,16 +245,9 @@ include("close.php");
                                     if (!$hasProduct) {
                                         ?>
 
-                                        <div class="ui bottom attached buttons">
-                                            <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                                            <div class="ui negative button"
-                                                 onclick="location.href='<?php echo "delete_categories.php?id=" . $grandchild["id"]; ?>'">
-                                                刪除該類別
-                                            </div>
-                                            <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                                            <div class="ui positive button" onclick="location.href='new_category.php'">
-                                                新增子類別
-                                            </div>
+                                        <div class="ui negative bottom attached button"
+                                             onclick="location.href='<?php echo "delete_categories.php?id=" . $grandchild["id"]; ?>'">
+                                            刪除該類別
                                         </div>
 
                                         <?php
