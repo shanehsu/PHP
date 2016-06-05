@@ -4,12 +4,9 @@ include("connect.php");
 
 $debug = true;
 
-$result = $mysqli->query("select * from categories where parent is null");
+$result = $mysqli->query("SELECT * FROM categories WHERE parent IS NULL");
 $total = mysqli_num_rows($result);
 $categories = array();
-
-
-
 
 
 for ($i = 0; $i < $total; $i++) {
@@ -134,140 +131,147 @@ include("close.php");
     </h1>
 
 
-<?php
-foreach ($categories as $category) {
-        switch ($category["depth"]) { 
-            case 1:?>
+    <?php
+    foreach ($categories as $category) {
+    switch ($category["depth"]) {
+    case 1:
+        ?>
 
 
-    <!-- 內容 -->
-    <!-- 若該類別的深度為 1 -->
-    <div class="ui attached padded segment"> <!-- attached CSS 類別跟下面那一排按鈕有關係，當沒有子項目的時候才套用他 -->
-        <p>
-            <span><?php echo $category["name"]; ?></span>
-            <span style="float: right;">共有 5 項商品</span>
-        </p>
-    </div>
-    <!--
-        因為這個按鈕部份，都是當沒有項目的時候才有，所以直接用 if 當沒子項目的時候顯示，
-     -->
+        <!-- 內容 -->
+        <!-- 若該類別的深度為 1 -->
+        <div class="ui attached padded segment"> <!-- attached CSS 類別跟下面那一排按鈕有關係，當沒有子項目的時候才套用他 -->
+            <p>
+                <span><?php echo $category["name"]; ?></span>
+                <span style="float: right;">共有 5 項商品</span>
+            </p>
+        </div>
+        <!--
+            因為這個按鈕部份，都是當沒有項目的時候才有，所以直接用 if 當沒子項目的時候顯示，
+         -->
 
 
-<?
-$result2 = $mysqli->query("select * from products");
-$total2 = mysqli_num_rows($result2);
+        <?
+        $result2 = $mysqli->query("SELECT * FROM products");
+        $total2 = mysqli_num_rows($result2);
 
-$out = 1;
+        $out = 1;
 
-for ($i = 0; $i < $total2; $i++) {
-$row2 = mysqli_fetch_row($result2);
+        for ($i = 0; $i < $total2; $i++) {
+            $row2 = mysqli_fetch_row($result2);
 
-if($category["id"] == $row2[8])
-    {$out = 0;break;}
+            if ($category["id"] == $row2[8]) {
+                $out = 0;
+                break;
+            }
 
-}
+        }
 
-if($out == 1)
-{
+        if ($out == 1) {
 
-?>    
+            ?>
 
-    <div class="ui bottom attached buttons">
-        <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-        <div class="ui negative button" onclick="location.href='<?echo "delete_categories.php?id=". $category["id"];?>'">刪除該類別</div>
-        <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-        <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
-    </div>
-<?
-}
-else 
-   {?>
-         <div class="ui bottom attached buttons">
+            <div class="ui bottom attached buttons">
+                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                <div class="ui negative button"
+                     onclick="location.href='<? echo "delete_categories.php?id=" . $category["id"]; ?>'">刪除該類別
+                </div>
+                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
+            </div>
+            <?
+        } else {
+            ?>
+            <div class="ui bottom attached buttons">
                 <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
                 <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
                 <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
                 <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
             </div>
-        <?}
+        <?
+        }
 
-$out = 1;
+        $out = 1;
 
 
-break;
-case 2:
+        break;
+    case 2:
     # code...
-    
-?>
+
+    ?>
     <!-- 兩層的話 -->
     <div class="ui padded segments">
         <!-- 這是爸爸的名字 -->
         <div class="ui padded segment">
             <p>
-                <span><?echo $category["name"];?></span>
+                <span><? echo $category["name"]; ?></span>
                 <span style="float: right;">共有 5 項商品</span>
             </p>
         </div>
-         <?php
-                        foreach ($category["children"] as $child) {
-                            ?>
-        <div class="ui attached padded segments">
-            <div class="ui padded segment">
-                <p>
-                    <span><?echo  $child["name"]?></span>
-                    <span style="float: right;">共有 5 項商品</span>
-                </p>
-            </div>
-
-            <?
-            for ($i = 0; $i < $total2; $i++) {
-                $row2 = mysqli_fetch_row($result2);
-
-                    if($child["id"] == $row2[8])
-                        {$out = 0;break;}
-
-}
-
-if($out == 1)
-{
+        <?php
+        foreach ($category["children"] as $child) {
             ?>
+            <div class="ui attached padded segments">
+                <div class="ui padded segment">
+                    <p>
+                        <span><? echo $child["name"] ?></span>
+                        <span style="float: right;">共有 5 項商品</span>
+                    </p>
+                </div>
+
+                <?
+                for ($i = 0; $i < $total2; $i++) {
+                    $row2 = mysqli_fetch_row($result2);
+
+                    if ($child["id"] == $row2[8]) {
+                        $out = 0;
+                        break;
+                    }
+
+                }
+
+                if ($out == 1) {
+                    ?>
 
 
-            <div class="ui bottom attached buttons">
-                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                <div class="ui negative button" onclick="location.href='<?echo "delete_categories.php?id=". $child["id"];?>'">刪除該類別</div>
-                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
+                    <div class="ui bottom attached buttons">
+                        <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                        <div class="ui negative button"
+                             onclick="location.href='<? echo "delete_categories.php?id=" . $child["id"]; ?>'">刪除該類別
+                        </div>
+                        <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                        <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
+                    </div>
+
+                    <?
+                } else {
+                    ?>
+                    <div class="ui bottom attached buttons">
+                        <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                        <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
+                        <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                        <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
+                    </div>
+                <?
+                }
+
+                $out = 1;
+
+                ?>
+
+
             </div>
 
-            <?
+
+            <?php
         }
-            else 
-    {?>
-         <div class="ui bottom attached buttons">
-                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
-                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
-            </div>
-        <?}
-
-$out = 1;
-
-            ?>
-            
-           
-            </div>
-
-
-             <?php
-                        }
-                        ?>
-        </div>
+        ?>
     </div>
+</div>
 
-     <?php
-                break;
-           case 3:
+<?php
+break;
+case 3:
     ?>
 
     <!-- 三層的話 -->
@@ -275,97 +279,96 @@ $out = 1;
         <!-- 這是爸爸的名字 -->
         <div class="ui padded segment">
             <p>
-                <span><?echo $category["name"];?></span>
+                <span><? echo $category["name"]; ?></span>
                 <span style="float: right;">共有 5 項商品</span>
             </p>
         </div>
-         <?php
-                        foreach ($category["children"] as $child) {
-                            ?>
-        <div class="ui attached padded segments">
-
-       
-            <div class="ui padded segment">
-                <p>
-                    <span><?echo $child["name"];?></span>
-                    <span style="float: right;">共有 5 項商品</span>
-                </p>
-            </div>
-
-            <?php
-                                    foreach ($child["children"] as $grandchild) {
-                                        ?>
+        <?php
+        foreach ($category["children"] as $child) {
+            ?>
             <div class="ui attached padded segments">
+
+
                 <div class="ui padded segment">
                     <p>
-                        <span><?echo  $grandchild["name"];?></span>
+                        <span><? echo $child["name"]; ?></span>
                         <span style="float: right;">共有 5 項商品</span>
                     </p>
                 </div>
-<?
-            for ($i = 0; $i < $total2; $i++) {
-                $row2 = mysqli_fetch_row($result2);
 
-                    if($grandchild["id"] == $row2[8])
-                        {$out = 0;break;}
+                <?php
+                foreach ($child["children"] as $grandchild) {
+                    ?>
+                    <div class="ui attached padded segments">
+                        <div class="ui padded segment">
+                            <p>
+                                <span><? echo $grandchild["name"]; ?></span>
+                                <span style="float: right;">共有 5 項商品</span>
+                            </p>
+                        </div>
+                        <?
+                        for ($i = 0; $i < $total2; $i++) {
+                            $row2 = mysqli_fetch_row($result2);
 
-}
+                            if ($grandchild["id"] == $row2[8]) {
+                                $out = 0;
+                                break;
+                            }
 
-if($out == 1)
-{
-            ?>
+                        }
 
-                <div class="ui bottom attached buttons">
-                    <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                    <div class="ui negative button" onclick="location.href='<?echo "delete_categories.php?id=". $grandchild["id"];?>'">刪除該類別</div>
-                    <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                    <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
-                </div>
+                        if ($out == 1) {
+                            ?>
 
-                <?
+                            <div class="ui bottom attached buttons">
+                                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                                <div class="ui negative button"
+                                     onclick="location.href='<? echo "delete_categories.php?id=" . $grandchild["id"]; ?>'">
+                                    刪除該類別
+                                </div>
+                                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                                <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
+                            </div>
+
+                            <?
+                        } else {
+                            ?>
+                            <div class="ui bottom attached buttons">
+                                <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                                <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
+                                <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
+                                <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
+                            </div>
+
+
+                        <? }
+
+                        $out = 1;
+
+                        ?>
+
+
+                    </div>
+
+                    <?php
+                }
+                ?>
+
+
+            </div>
+
+            <?php
         }
-            else 
-    {?>
-        <div class="ui bottom attached buttons">
-                    <!-- 刪除按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                    <div class="ui negative button" onclick="location.href='categories.php'">刪除該類別</div>
-                    <!-- 新增按鈕，不一定要有作用，只有在可以刪除的時候有用（沒有子項目） -->
-                    <div class="ui positive button" onclick="location.href='categories.php'">新增子類別</div>
-                </div>
+        ?>
 
-
-
-
-
-
-   <? }
-
-$out = 1;
-
-            ?>
-                
-           
-        </div>
-
- <?php
-                                    }
-                                    ?>
-
-        
     </div>
 
-<?php
-                        }
-                        ?>
-    
-</div>
-
- <?php
-                break;
-            default:
-                die("目錄深度太深。");
-        }
-    }
-    ?>
+    <?php
+    break;
+default:
+    die("目錄深度太深。");
+}
+}
+?>
 </body>
 </html>
