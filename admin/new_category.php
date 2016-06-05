@@ -74,7 +74,7 @@ else
             <label>類別名稱</label>
             <input type="text" name="name" placeholder="類別名稱">
         </div>
-        <button type="submit" class="ui button" type="submit">新增</button>
+        <button  class="ui button" type="submit">新增</button>
     </form>
 </div>
 </body>
