@@ -58,26 +58,19 @@
     <div class="ui items">
         <div class="item">
         <?php
-            include("connect.php");
+            include("util/connect.php");
 
-                    if (isset($_GET['id']))
-                    {
-                        $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
-                    } 
-                    $row = mysqli_fetch_row($result);
+            if (isset($_GET['id']))
+            {
+                $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
+                $row = mysqli_fetch_row($result);
+            }
         ?>
             <a class="ui image">
                 <img src="<?php echo "images.php?id={$row[0]}" ?> ">
             </a>
             <div class="middle aligned content">
-                <?php 
-                    include("connect.php");
-
-                    if (isset($_GET['id']))
-                    {
-                        $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
-                    } 
-                    $row = mysqli_fetch_row($result);              
+                <?php
                     echo "<h1 class=\"ui header\">". $row[1] ."</h1>
                             <div class=\"meta\">
                                 <div class=\"recent\" style=\"display: inline-block;\">
@@ -145,7 +138,7 @@
                 $i++;
             }
             echo "</div>";
-            include("close.php");
+            include("util/close.php");
             
         ?>      
         <div style="padding-left: 2rem; flex-grow: 1; margin: 0;" class="ui comments">

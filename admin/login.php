@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $statement -> bind_param('s', $username);
     $statement -> execute();
     $statement -> bind_result($result_id, $result_password);
-    $statement -> fetch();
+    $statement -> fetch(); // 沒有東西的話，剛剛好，反正只是不會有值
     
     if ($result_password == $password) {
         // 成功登入
