@@ -1,4 +1,3 @@
-<pre>
 <?php
     include("connect.php");
     /*if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -13,14 +12,14 @@
     if (isset($_POST['title'])) {
         $sql ="update posts set title=".$_POST['title'].",related_product=".$_POST['related_product']."  where id = $id";
         if (mysqli_query($mysqli, $sql)) {
-            header(' posts.php');
+            header('Location: posts.php');
         } else {
             echo "無法修改。";
             echo mysqli_error($mysqli);
         }
     }
 ?>
-</pre>
+
 <!DOCTYPE html>
 <html>
 <head>
