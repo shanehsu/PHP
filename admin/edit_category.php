@@ -1,3 +1,35 @@
+<?php
+include("connect.php");
+
+if (isset($_GET['id']))
+{
+        $result = $mysqli -> query("select * from categories where id = " . intval($_GET['id']));
+        $row = mysqli_fetch_row($result);        
+        $id = intval($_GET['id']);
+
+}
+
+
+    if (isset($_POST['name'])) 
+    {
+        $sql ="update categories set name =".$_POST['name']."  where id = $id";
+        if (mysqli_query($mysqli, $sql)) 
+        {
+            header('Location: categories.php');
+        } 
+        else 
+        {
+            echo "無法修改。";
+            echo mysqli_error($mysqli);
+        }
+    }
+
+
+
+
+
+include("close.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,12 +60,12 @@
         分類
     </h1>
 
-    <form style="max-width: 30em; margin: 0 auto;" class="ui form" action="" method="POST">
+    <form style="max-width: 30em; margin: 0 auto;" class="ui form" action="edit_post.php?id" method="POST">
         <div class="field">
             <label>類別名稱</label>
             <input type="text" name="name" placeholder="類別名稱">
         </div>
-        <button class="ui button" type="submit">更新</button>
+        <button  class="ui button" type="submit">更新</button>
     </form>
 </div>
 </body>

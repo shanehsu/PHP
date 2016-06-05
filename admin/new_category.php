@@ -1,3 +1,44 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    include("connect.php");
+            $result = $mysqli -> query("select * from posts");
+            $total = mysqli_num_rows($result);
+            $new_id = $total + 1;
+    
+    if (isset($_POST['name'])) 
+    {
+        $sql="insert into categories (id, name ,parent) values ('" . $new_id . "','" . $_POST['name']. "','" . $parent"')";
+        if (mysqli_query($mysqli, $sql)) {
+            header('Location: categories.php');
+    } 
+    else 
+    {
+            echo "無法新增。";
+            echo mysqli_error($mysqli);
+    }
+        
+    include("close.php");
+}
+
+
+else
+{
+    include("connect.php");
+
+     if (isset($_GET['id']))
+        {
+            $parent =  intval($_GET['id']);  //紀錄parent
+        }
+
+    
+     
+    include("close.php");
+
+
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,12 +69,12 @@
         分類
     </h1>
 
-    <form style="max-width: 30em; margin: 0 auto;" class="ui form" action="" method="POST">
+    <form style="max-width: 30em; margin: 0 auto;" class="ui form" action="new_category.php" method="POST">
         <div class="field">
             <label>類別名稱</label>
             <input type="text" name="name" placeholder="類別名稱">
         </div>
-        <button class="ui button" type="submit">新增</button>
+        <button type="submit" class="ui button" type="submit">新增</button>
     </form>
 </div>
 </body>
