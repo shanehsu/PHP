@@ -69,7 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $messages[] = "密碼錯誤。";
     }
     
-    
+    $statement -> close();
+
     // 關閉資料庫連線
     include './../util/close.php';
 }

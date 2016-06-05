@@ -1,50 +1,36 @@
-<?session_start();?>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-<?
-
-
-
-$login = 0;
-$account = $_POST['username'];
+<?php
+$username = $_POST['username'];
 $password = $_POST['password'];
-$password2 = $_POST["confirm"];
+$confirm = $_POST["confirm"];
 $email = $_POST["email"];
 $phone = $_POST["phone"];
 $name = $_POST["name"];
 $address = $_POST["address"];
+$terms = ($_POST["terms"] == 'agreed');
 
-if($email != "" || $password != ""){
-    include("util/connect.php")
-        }
+if($username != "" && $password != "" && $confirm != "" && $email != "" && $phone != "" && $name != "" && $address != "" && $terms && $password == $confirm) {
+    include("util/connect.php");
 
-    //$sql = "SELECT * FROM member where Email='$email' ";
+    $statement = $mysqli -> prepare('INSERT INTO member (username, password, email, name, phone, address, identity) VALUES (?, ?, ?, ?, ?, ?, 1)');
+    $statement -> bind_param('ssssss', $username, $password, $email, $name, $phone, $address);
 
+    if ($statement -> execute()) {
+        ?>
+        <script>
+            alert('註冊成功！請重新登入。')
+            window.location.assign('/index.php')
+        </script>
+        <?php
+    } else {
+        ?>
+        <script>
+            alert('註冊失敗！')
+            window.location.assign('/index.php')
+        </script>
+        <?php
+    }
 
-    if($account != null && $password != null && $password2 != null && $password == $password2)
-{
-        //新增資料進資料庫語法
-        $sql = "insert into member(account, password, Email,name, phone, address) values ('$account', '$password', '$email', '$name','$phone', '$address')";
-        if(mysql_query($sql))
-        {
-                echo '新增成功!';
-                echo '<meta http-equiv=REFRESH CONTENT=2;url=index.php>';
-        }
-        else
-        {
-                echo '新增失敗!';
-                echo '<meta http-equiv=REFRESH CONTENT=2;url=index.php>';
-        }
+    include("util/close.php");
+} else {
+    die("每個欄位都要填寫。");
 }
-else
-{
-        echo '您無權限觀看此頁面!';
-        echo "$account , $password, $password2";
-        echo '<meta http-equiv=REFRESH CONTENT=2;url=index.php>';
-}
-
-
-
-
-
-?>
