@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($action == 'insert') {
         $item = $payload['itemID'];
 
-        $stmt = $mysqli -> prepare('SELECT item FROM group_12.cart WHERE item = ?');
-        $stmt -> bind_param('d', $item);
+        $stmt = $mysqli -> prepare('SELECT item FROM group_12.cart WHERE item = ? AND member = ?');
+        $stmt -> bind_param('dd', $item, $uid);
         $stmt -> bind_result($test_item);
         $stmt -> execute();
         $stmt -> fetch();

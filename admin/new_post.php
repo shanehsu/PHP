@@ -1,6 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include("connect.php");
+    include("./../util/connect.php");
     // date_default_timezone_set('Asia/Taipei');
     if (isset($_POST['title'])) {
         $sql="insert into posts (title, related_product) values ('" . $_POST['title'] . "','" . $_POST['related_product']. "')";
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         // echo mysqli_error($mysqli);
     }
-    include("close.php");
+    include("./../util/close.php");
 }
 ?>
 

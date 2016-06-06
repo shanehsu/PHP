@@ -1,6 +1,6 @@
 <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        include("connect.php");
+        include("./../util/connect.php");
 
         $type = $_FILES['imageFile']['type'];
 
@@ -24,7 +24,7 @@
             }
         }
 
-        include("close.php");
+        include("./../util/close.php");
     }
 ?>
 <!DOCTYPE html>

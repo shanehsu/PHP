@@ -1,5 +1,5 @@
 <?php
-include("connect.php");
+include("./../util/connect.php");
 
 $debug = true;
 
@@ -65,7 +65,7 @@ foreach ($categories as &$category) {
 
 unset($category);
 
-include("close.php");
+include("./../util/close.php");
 ?>
 
 <!DOCTYPE html>

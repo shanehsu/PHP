@@ -45,15 +45,28 @@
     </div>
     <!-- Product -->
     <div class="ui items">
-        <div class="item">
-            <?php
-            include("util/connect.php");
+        <?php
+        include("util/connect.php");
 
-            if (isset($_GET['id'])) {
-                $result = $mysqli -> query("SELECT * FROM products WHERE id = " . intval($_GET['id']));
-                $row = mysqli_fetch_row($result);
-            }
-            ?>
+        $stmtc = $mysqli -> prepare('SELECT GROUP_CONCAT(item) FROM group_12.cart WHERE member = ?');
+        $stmtc -> bind_param('d', $uid);
+        $stmtc -> bind_result($result);
+        $stmtc -> execute();
+        $stmtc -> fetch();
+
+        $bought_str = explode(',', $result);
+        $bought = [];
+        foreach ($bought_str as $bought_str_item) {
+            $bought[] = intval($bought_str_item);
+        }
+        $stmtc -> close();
+        if (isset($_GET['id'])) {
+            $result = $mysqli -> query("SELECT * FROM products WHERE id = " . intval($_GET['id']));
+            $row = mysqli_fetch_row($result);
+            $inCart = in_array($row[0], $bought);
+        }
+        ?>
+        <div class="item" data-pid="<?=$row[0]?>">
 
             <a class="ui image">
                 <img src="<?php echo "images.php?id={$row[0]}" ?> ">
@@ -63,7 +76,7 @@
                 echo "<h1 class=\"ui header\">" . $row[1] . "</h1>
                             <div class=\"meta\">
                                 <div class=\"recent\" style=\"display: inline-block;\">
-                                    <i class=\"users icon\"></i>共有XXX人購買
+                                    <i class=\"users icon\"></i>三天內共有 XXX 人購買
                                 </div>
                                 <span class=\"price quantity separator\"></span>
                                 <div class=\"rating\" style=\"display: inline-block;\">
@@ -72,10 +85,20 @@
                             </div>
                         <div style=\"max-width: 25em;\" class=\"description\"><p>" . $row[5] . "</p></div>";
                 ?>
-                <div class="extra">
-                    <div onclick="addToCart(<?php echo $row[0]; ?>)" class="ui blue add to cart button">
-                        <i class="add icon"></i> 加入購物車
-                    </div>
+                <div class="cart-button extra <?php echo $inCart ? 'purchased' : '' ?>">
+                    <?php
+                    if ($authenticated) {
+                        ?>
+                        <div onclick="addToCart(<?php echo $row[0]; ?>)" class="ui green added to cart button">
+                            <i class="checkmark icon"></i>
+                            在購物車內
+                        </div>
+                        <div onclick="addToCart(<?php echo $row[0]; ?>)" class="ui blue add to cart button">
+                            <i class="add icon"></i> 加入購物車
+                        </div>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
             <div class="ui right floated large statistics">

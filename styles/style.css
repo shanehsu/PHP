@@ -94,3 +94,14 @@ body .ui.container {
   -webkit-box-shadow: inset 0px 0px 3px 1px rgba(0, 0, 0, 1);
   box-shadow: inset 0px 0px 20px 25px white;
 }
+
+.cart-button.purchased .add.to.cart {
+  display: none;
+}
+
+/*.cart-button.purchased .added.to.cart {} */
+/*.cart-button:not(.purchased) .add.to.cart {}*/
+
+.cart-button:not(.purchased) .added.to.cart {
+  display: none;
+}

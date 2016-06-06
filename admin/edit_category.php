@@ -1,5 +1,5 @@
 <?php
-include("connect.php");
+include("./../util/connect.php");
 
 if (isset($_GET['id']))
 {
@@ -28,7 +28,7 @@ if (isset($_GET['id']))
 
 
 
-include("close.php");
+include("./../util/close.php");
 ?>
 <!DOCTYPE html>
 <html>

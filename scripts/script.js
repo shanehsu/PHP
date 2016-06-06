@@ -16,7 +16,7 @@ $(function () {
         onApprove: function (element) {
             var action = element.attr('id')
             if (action.includes('register')) {
-                window.location.assign('register.php')
+                window.location.assign('signup.php')
             } else if (action.includes('login')) {
                 var result = undefined
 
@@ -149,7 +149,12 @@ function updateCartItem(item, quantity, callback) {
         contentType: "application/json",
         async: false,
         success: function(res) {
-            if (res == 'true') callback(true)
+            if (res == 'true') {
+                if (quantity == 0) {
+                    $('*[data-pid=' + item + '] *.cart-button').removeClass('purchased')
+                }
+                callback(true)
+            }
             else callback(false)
         },
         error: function() { callback(false) }
@@ -166,41 +171,49 @@ function addCartItem(item, callback) {
         contentType: "application/json",
         async: false,
         success: function(res) {
-            if (res == 'true') callback(true)
+            if (res == 'true') {
+                $('*[data-pid=' + item + '] *.cart-button').addClass('purchased')
+                callback(true)
+            }
             else callback(false)
         },
         error: function() { callback(false) }
     })
 }
 
-// function removeCartItem(item, callback) {
-//     $.ajax('/ajax/cart.php', {
-//         method: 'POST',
-//         data: {
-//             action: 'remove',
-//             itemID: item
-//         },
-//         success: function(res) {
-//             if (res == 'true') callback(true)
-//             else callback(false)
-//         },
-//         error: function() { callback(false) }
-//     })
-// }
-//
-// function clearCart(callback) {
-//     $.ajax('/ajax/cart.php', {
-//         method: 'POST',
-//         data: {
-//             action: 'clear'
-//         },
-//         success: function(res) {
-//             if (res == 'true') callback(true)
-//             else callback(false)
-//         },
-//         error: function() { callback(false) }
-//     })
-// }
+function removeCartItem(item, callback) {
+    $.ajax('/ajax/cart.php', {
+        method: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify({
+            action: 'remove',
+            itemID: item
+        }),
+        success: function(res) {
+            if (res == 'true') {
+                $('*[data-pid=' + item + '] *.cart-button').removeClass('purchased')
+                callback(true)
+            }
+            else callback(false)
+        },
+        error: function() { callback(false) }
+    })
+}
+
+function clearCart(callback) {
+    $.ajax('/ajax/cart.php', {
+        method: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify({
+            action: 'clear'
+        }),
+        success: function(res) {
+            if (res == 'true') callback(true)
+            else callback(false)
+        },
+        error: function() { callback(false) }
+    })
+}
 
 function quantity_plus(id) {
     "use strict";

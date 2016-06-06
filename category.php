@@ -26,6 +26,18 @@
             <div class="ui four doubling cards">
                 <?php
                 include("util/connect.php");
+                $stmtc = $mysqli -> prepare('SELECT GROUP_CONCAT(item) FROM group_12.cart WHERE member = ?');
+                $stmtc -> bind_param('d', $uid);
+                $stmtc -> bind_result($result);
+                $stmtc -> execute();
+                $stmtc -> fetch();
+
+                $bought_str = explode(',', $result);
+                $bought = [];
+                foreach ($bought_str as $bought_str_item) {
+                    $bought[] = intval($bought_str_item);
+                }
+                $stmtc -> close();
 
                 if (isset($_GET['id'])) {
                     $result = $mysqli->query("SELECT * FROM products WHERE categories = " . intval($_GET['id']));
@@ -33,8 +45,9 @@
                 $total = mysqli_num_rows($result);
                 for ($i = 0; $i < $total; $i++) {
                     $row = mysqli_fetch_row($result);
+                    $inCart = in_array($row[0], $bought);
                     ?>
-                    <div class="card">
+                    <div class="card" data-pid="<?=$row[0]?>">
                         <div class="image">
                             <img src="<?php echo "images.php?id={$row[7]}" ?> "/>
                         </div>
@@ -59,18 +72,26 @@
                         </div>
                         <div class="extra content">
                             <div class="rating">
-                                <div class="ui star rating" data-rating="<?php echo $row[9]; ?>" data-max-rating="5"></div>
+                                <div class="ui star rating" data-rating="<?php echo $row[9]; ?>"
+                                     data-max-rating="5"></div>
                             </div>
                         </div>
                         <div class="extra content">
                             <div class="recent">
                                 <i class="users icon"></i>
-                                近三天內有 493 人購買
+                                近三天內有 XXX 人購買
                             </div>
                         </div>
-                        <div onclick="addToCart(<?php echo $row[0]; ?>)" class="ui bottom attached blue add to cart button">
-                            <i class="add icon"></i>
-                            加入購物車
+                        <div class="cart-button <?php echo $inCart ? 'purchased' : '' ?>">
+                            <div class="added to cart ui bottom attached green button">
+                                <i class="checkmark icon"></i>
+                                在購物車內
+                            </div>
+                            <div onclick="addToCart(<?php echo $row[0]; ?>)"
+                                 class="ui bottom attached blue add to cart button">
+                                <i class="add icon"></i>
+                                加入購物車
+                            </div>
                         </div>
                     </div>
                     <?php

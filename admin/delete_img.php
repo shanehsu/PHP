@@ -1,5 +1,5 @@
 <?php
-	include("connect.php");
+	include("./../util/connect.php");
 	 if (isset($_GET['id']))
         {
         	$result = $mysqli -> query("select * from images where id = " . intval($_GET['id']));
@@ -13,5 +13,5 @@
             echo "無法修改。";
             echo mysqli_error($mysqli);
         }
-	include("close.php");
+	include("./../util/close.php");
 ?>

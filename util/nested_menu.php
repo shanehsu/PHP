@@ -74,9 +74,6 @@ include("close.php");
 </pre>
 
 <div class="ui vertical menu" style="max-width: 30rem;">
-    <a class="item">
-        特惠專區
-    </a>
     <?php
     foreach ($categories as $category) {
         switch ($category["depth"]) {

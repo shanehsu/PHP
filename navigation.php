@@ -5,6 +5,12 @@
  * Date: 2016/6/5
  * Time: 下午2:28
  */
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+$authenticated = isset($_SESSION['_AUTHENTICATED']) && $_SESSION['_AUTHENTICATED'];
+$uid = intval($_SESSION['_ID']);
 ?>
 
 <div class="ui large menu">
@@ -17,8 +23,6 @@
             </div>
         </div>
         <?php
-        session_start();
-        $authenticated = isset($_SESSION['_AUTHENTICATED']) && $_SESSION['_AUTHENTICATED'];
 
         if (!$authenticated) {
             ?>
@@ -36,21 +40,19 @@
             $statement -> bind_result($name);
             $statement -> fetch();
 
-
             include 'util/close.php';
             ?>
             <div class="ui dropdown item">
                 <?php echo $name; ?>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a href="members.php" class="item">會員中心</a>
+                    <a href="member.php" class="item">會員中心</a>
                     <a id="logout" class="item">登出</a>
                 </div>
             </div>
-
+            <a id="cart-modal-show" class="ui item">購物車</a>
             <?php
         }
         ?>
-        <a id="cart-modal-show" class="ui item">購物車</a>
     </div>
 </div>

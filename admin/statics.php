@@ -41,7 +41,7 @@
         </thead>
         <tbody>
         <?php
-            include("connect.php");
+            include("./../util/connect.php");
             $result = $mysqli -> query("select * from images");
             $total = mysqli_num_rows($result);
             for($i = 0; $i < $total; $i++) {
@@ -72,7 +72,7 @@
         </tr>
         <?php
             }
-            include("close.php");
+            include("./../util/close.php");
         ?>
         </tbody>
         <tfoot class="full-width">

@@ -23,7 +23,7 @@
     </h1>
     <div class="ui items">
         <?php
-            include("connect.php");
+            include("./../util/connect.php");
             $result = $mysqli -> query("select * from posts");
             $total = mysqli_num_rows($result);
             for($i = 0; $i < $total; $i++) {
@@ -49,7 +49,7 @@
         </div>
         <?php
             }
-            include("close.php");
+            include("./../util/close.php");
         ?>
     </div>
 </div>

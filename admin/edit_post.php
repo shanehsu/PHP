@@ -1,5 +1,5 @@
 <?php
-    include("connect.php");
+    include("./../util/connect.php");
     /*if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     }*/
@@ -58,7 +58,7 @@
         </div>
         <button class="ui button" type="submit">編輯</button>
         <?php
-            include("close.php");
+            include("./../util/close.php");
         ?>
     </form>
 </div>

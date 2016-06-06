@@ -80,9 +80,6 @@ $column_style_classes = array(
 ?>
 
 <div class="ui secondary fluid vertical menu" style="max-width: 30rem;">
-    <a class="item">
-        特惠專區
-    </a>
     <?php
     foreach ($categories as $category) {
         switch ($category["depth"]) {

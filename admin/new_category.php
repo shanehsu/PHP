@@ -1,41 +1,32 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') 
-{
-    include("connect.php");
-            $result = $mysqli -> query("select * from posts");
-            $total = mysqli_num_rows($result);
-            $new_id = $total + 1;
-    
-    if (isset($_POST['name'])) 
-    {
-        $sql="insert into categories (id, name ,parent) values ('" . $new_id . "','" . $_POST['name']. "','" . $parent"')";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    include("./../util/connect.php");
+    $result = $mysqli->query("SELECT * FROM posts");
+    $total = mysqli_num_rows($result);
+    $new_id = $total + 1;
+
+    if (isset($_POST['name'])) {
+        $sql = "INSERT INTO categories (id, name ,parent) VALUES ('" . $new_id . "','" . $_POST['name'] . "', '" . $parent . "')";
         if (mysqli_query($mysqli, $sql)) {
             header('Location: categories.php');
-    } 
-    else 
-    {
+        } else {
             echo "無法新增。";
             echo mysqli_error($mysqli);
-    }
-        
-    include("close.php");
-}
-
-
-else
-{
-    include("connect.php");
-
-     if (isset($_GET['id']))
-        {
-            $parent =  intval($_GET['id']);  //紀錄parent
         }
 
-    
-     
-    include("close.php");
+        include("./../util/close.php");
+    } else {
+        include("./../util/connect.php");
+
+        if (isset($_GET['id'])) {
+            $parent = intval($_GET['id']);  //紀錄parent
+        }
 
 
+        include("./../util/close.php");
+
+
+    }
 }
 ?>
 

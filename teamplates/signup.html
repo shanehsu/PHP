@@ -1,64 +1,20 @@
-<?php
-
-require 'util/UserNotAuthenticatedRequired.php';
-
-if ($_SERVER["REQUEST_METHOD"] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $confirm = $_POST["confirm"];
-    $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $name = $_POST["name"];
-    $address = $_POST["address"];
-    $terms = ($_POST["terms"] == 'agreed');
-
-    if($username != "" && $password != "" && $confirm != "" && $email != "" && $phone != "" && $name != "" && $address != "" && $terms && $password == $confirm) {
-        include("util/connect.php");
-
-        $statement = $mysqli -> prepare('INSERT INTO member (username, password, email, name, phone, address, identity) VALUES (?, ?, ?, ?, ?, ?, 1)');
-        $statement -> bind_param('ssssss', $username, $password, $email, $name, $phone, $address);
-
-        if ($statement -> execute()) {
-            ?>
-            <script>
-                alert('註冊成功！請重新登入。')
-                window.location.assign('/index.php')
-            </script>
-            <?php
-            exit();
-        } else {
-            ?>
-            <script>
-                alert('註冊失敗！')
-            </script>
-            <?php
-        }
-
-        include("util/close.php");
-    } else {
-        die("每個欄位都要填寫。");
-    }
-}
-?>
-
 <html>
 
 <head>
     <meta charset="utf-8">
     <title>阿寯的美食天地</title>
-    <link rel="stylesheet" type="text/css" href="semantic/semantic.css">
-    <link rel="stylesheet" type="text/css" href="styles/style.css">
-    <script src="scripts/jquery-2.2.2.js"></script>
-    <script src="semantic/semantic.js"></script>
-    <script src="scripts/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="../semantic/semantic.css">
+    <link rel="stylesheet" type="text/css" href="../styles/style.css">
+    <script src="../scripts/jquery-2.2.2.js"></script>
+    <script src="../semantic/semantic.js"></script>
+    <script src="../scripts/script.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script>
-        var debug = false;
-
-        if (debug) {
-            console.warn("測試中：已啟用測試功能，將自動填寫表單預設值，方便測試。")
-        }
+        var debug = true;
+        
+        console.warn("可實作：加入同步使用者名稱檢查。（使用 AJAX，但是函數是同步的）")
+        console.warn("測試中：已啟用測試功能，將自動填寫表單預設值，方便測試。")
         
         $.fn.form.settings.rules.validPassword = function(value) {
             var set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
@@ -66,24 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
                 if (set.indexOf(x) < 0) return false
             }
             return true
-        }
-
-        $.fn.form.settings.rules.usernameInUse = function(value) {
-            var result = true
-
-            req = $.ajax('/ajax/check_username.php?username=' + value, {
-                async: false,
-                cache: false,
-                dataType: 'text',
-                timeout: 250,
-                success: function(response) {
-                    if (response == 'false') {
-                        result = false;
-                    }
-                }
-            })
-            console.log("RESULT = " + result);
-            return result
         }
         $(document).ready(function($) {
             $('.ui.checkbox').checkbox()
@@ -116,10 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
                             {
                                 type: 'regExp[/^[.\\w]*$/]',
                                 prompt: '使用者名稱只能包含英文、數字、點（.）以及底線（_）'
-                            },
-                            {
-                                type: 'usernameInUse',
-                                prompt: '使用者名稱已經被使用'
                             }
                         ]
                     },
@@ -216,13 +150,22 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
 <body>
     <br>
     <div class="ui container">
-
-        <?php
-        include 'navigation.php';
-        ?>
-
+        <div class="ui large menu">
+            <a class="active item">阿寯的美食天地</a>
+            <div class="right menu">
+                <div class="collapsed search item">
+                    <div class="ui icon input">
+                        <input type="text" placeholder="關鍵字">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+                <a class="search trigger ui item"><i class="search link marginless icon"></i></a>
+                <a id="login-modal-show" class="ui item">登入</a>
+                <a id="cart-modal-show" class="ui item">購物車</a>
+            </div>
+        </div>
         <div style="min-width: 30em; width: 50%; margin: 0 auto;">
-            <form class="ui form" role="form" id="form1" action="signup.php" method="POST">
+            <form class="ui form" role="form" id="form1">
                 <h1>會員註冊</h1>
                 <div class="field">
                     <label>姓名</label>
@@ -255,13 +198,13 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
                 <br />
                 <div class="field" style="text-align: center;">
                     <div class="ui checkbox">
-                        <input type="checkbox" id="terms" name="terms" value="agreed" class="hidden">
+                        <input type="checkbox" id="terms" name="terms" class="hidden">
                         <label>我同意相關服務條款</label>
                     </div>
                 </div>
                 <br />
                 <div class="field" style="text-align: center;">
-                    <button type="submit" class="ui inverted green submit button">註冊</button>
+                    <button class="ui inverted green submit button">註冊</button>
                 </div>
                 <div class="ui right rail">
                     <div class="ui error message"></div>
@@ -269,8 +212,4 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             </form>
         </div>
     </div>
-    <?php
-    include 'modals.php';
-    ?>
 </body>
-</html>

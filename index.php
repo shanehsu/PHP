@@ -141,7 +141,7 @@
                         $row = mysqli_fetch_row($result);
                         echo "<div class =\"item\">
                               <div class =\"content\">
-                                <a class =\"header\" href = \"http://localhost/product.php?id=$row[3]\">" . $row[1] . "</a>
+                                <a class =\"header\" href = \"/product.php?id=$row[3]\">" . $row[1] . "</a>
                                 <div class =\"description\">" . $row[2] . "</div>
                               </div>
                             </div>";
