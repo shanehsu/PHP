@@ -16,12 +16,24 @@ $_ADMIN_NAVIGATION_CONFIGURATION = array(
         'href' => 'statics'
     ),
     array(
+        'name' => '首頁輪播',
+        'href' => 'carousel'
+    ),
+    array(
         'name' => '分類',
         'href' => 'categories'
     ),
     array(
         'name' => '產品',
         'href' => 'products'
+    ),
+    array(
+        'name' => '會員',
+        'href' => 'members'
+    ),
+    array(
+        'name' => '評論',
+        'href' => 'comments'
     )
 );
 

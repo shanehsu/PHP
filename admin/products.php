@@ -7,12 +7,6 @@
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
     <script src="../scripts/jquery-2.2.2.js"></script>
     <script src="../semantic/semantic.js"></script>
-
-    <script>
-    </script>
-
-    <style>
-    </style>
 </head>
 <body>
 <div class="ui container">
@@ -26,7 +20,32 @@
         產品
     </h1>
 
-    <!-- 內容 -->
+    <?php
+    include './../util/connect.php';
+    ?>
+
+    <?php
+    // 取得產品列表
+
+    $stmt = $mysqli->prepare('SELECT id, name FROM categories');
+    $stmt->bind_result($catID, $catName);
+    $stmt->execute();
+
+    $categories = array();
+    while ($stmt -> fetch()) {
+        $categories[$catID] = $catName;
+    }
+    $stmt -> close();
+    ?>
+
+    <?php
+    // 取得產品列表
+
+    $stmt = $mysqli->prepare('SELECT id, thumbnail, name, sell_quantity, price, description, categories FROM products');
+    $stmt->bind_result($id, $thumbnail, $name, $sell_quantity, $price, $desc, $cat);
+    $stmt->execute();
+    ?>
+
     <table class="ui celled padded table">
         <thead>
         <tr>
@@ -40,40 +59,51 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td style="text-align: center;">
-                1
-            </td>
-            <td>
-                <img style="max-height: 6em; max-width: 6em;" src="/images.php?id=1">
-            </td>
-            <td class="single line">
-                美國香蕉
-            </td>
-            <
-            <td>
-                5 個 $1000
-            </td>
-            <td>
-                從台灣進口至美國的香蕉，經過美國軍方嚴密的檢查，保證不包含任何農藥。
-            </td>
-            <td>
-                美國
-            </td>
-            <td class="center aligned">
-                <a>編輯</a>
-                <a>刪除</a>
-            </td>
-        </tr>
+        <?php
+        while ($stmt->fetch()) {
+            ?>
+            <tr>
+                <td style="text-align: center;">
+                    <?php echo $id; ?>
+                </td>
+                <td>
+                    <img style="max-height: 6em; max-width: 6em;" src="/images.php?id=<?php echo $thumbnail; ?>"/>
+                </td>
+                <td class="single line">
+                    <?php echo $name; ?>
+                </td>
+                <td>
+                    <?php echo $sell_quantity; ?> $<?php echo $price; ?>
+                </td>
+                <td>
+                    <?php echo $desc; ?>
+                </td>
+                <td>
+                    <?php echo $categories[$cat]; ?>
+                </td>
+                <td class="center aligned">
+                    <a href="edit_product.php?id=<?php echo $id; ?>">編輯</a>
+                    <a href="delete_product.php?id=<?php echo $id; ?>">刪除</a>
+                </td>
+            </tr>
+            <?php
+        }
+        $stmt -> close();
+        ?>
         </tbody>
         <tfoot class="full-width">
         <tr>
             <th class="right aligned" colspan="7">
-                <a>新增產品</a>
+                <a href="new_product.php">新增產品</a>
             </th>
         </tr>
         </tfoot>
     </table>
+
+
+    <?php
+    include './../util/close.php';
+    ?>
 </div>
 </body>
 </html>

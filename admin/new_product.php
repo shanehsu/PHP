@@ -3,8 +3,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
     // 修改！
     include './../util/connect.php';
 
-    $stmt = $mysqli -> prepare('UPDATE products SET name = ?, sell_quantity = ?, price = ?, description = ?, detail = ?, thumbnail = ?, categories = ? WHERE id = ?');
-    $id = intval($_GET['id']);
+    $stmt = $mysqli -> prepare('INSERT INTO products (name, sell_quantity, price, description, detail, thumbnail, categories) VALUES (?, ?, ?, ?, ?, ?, ?)');
     $name = $_POST['name'];
     $sell_quantity = $_POST['sell_quantity'];
     $price = intval($_POST['price']);
@@ -13,14 +12,14 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
     $thumbnail = intval($_POST['thumbnail']);
     $categories = intval($_POST['category']);
 
-    $stmt -> bind_param('ssdsssdd', $name, $sell_quantity, $price, $description, $detail, $thumbnail, $categories, $id);
+    $stmt -> bind_param('ssdsssd', $name, $sell_quantity, $price, $description, $detail, $thumbnail, $categories);
 
     if ($stmt -> execute()) {
         header('Location: products.php');
     } else {
         ?>
         <script>
-            alert('修改失敗！');
+            alert('新增失敗！');
         </script>
         <?php
     }
@@ -57,56 +56,38 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         產品
     </h1>
 
-    <?php
-    include './../util/connect.php';
-    ?>
-
-    <?php
-    // 取得該產品
-    $statement = $mysqli -> prepare('SELECT id, name, sell_quantity, price, description, detail, thumbnail, categories FROM products WHERE id = ?');
-    $getID = intval($_GET['id']);
-    $statement -> bind_param('d', $getID);
-    $statement -> bind_result($id, $name, $sell_quantity, $price, $description, $detail, $thumbnail, $categories);
-    $statement -> execute();
-    $statement -> fetch();
-    ?>
-
     <form class="ui form" method="POST">
         <div class="field">
             <label>產品名稱</label>
-            <input type="text" name="name" value="<?php echo $name; ?>"/>
+            <input type="text" name="name"/>
         </div>
         <div class="field">
             <label>販售單位</label>
-            <input type="text" name="sell_quantity" value="<?php echo $sell_quantity; ?>"/>
+            <input type="text" name="sell_quantity"/>
         </div>
         <div class="field">
             <label>販售價格</label>
-            <input type="number" name="price" value="<?php echo $price; ?>"/>
+            <input type="number" name="price"/>
         </div>
         <div class="field">
             <label>簡單敘述</label>
-            <input name="description" value="<?php echo $description; ?>"/>
+            <input name="description"/>
         </div>
         <div class="field">
             <label>產品說明</label>
-            <textarea name="detail"><?php echo $detail; ?></textarea>
+            <textarea name="detail"></textarea>
         </div>
         <div class="field">
             <label>縮圖 ID</label>
-            <input name="thumbnail" value="<?php echo $thumbnail; ?>"/>
+            <input name="thumbnail"/>
         </div>
         <div class="field">
             <label>分類</label>
-            <input type="number" name="category" value="<?php echo $categories; ?>"/>
+            <input type="number" name="category"/>
         </div>
 
         <button type="submit" class="ui blue basic button">送出</button>
     </form>
-
-    <?php
-    include './../util/close.php';
-    ?>
 </div>
 </body>
 </html>

@@ -31,6 +31,14 @@
     include 'navigation.php';
     ?>
 
+    <?php
+    include 'util/connect.php';
+
+    $stmt = $mysqli -> prepare('SELECT image FROM carousel');
+    $stmt -> bind_result($iid);
+    $stmt -> execute();
+    ?>
+
     <div id="image-carousel">
         <div id="Glide" class="glide">
 
@@ -43,11 +51,16 @@
 
             <div class="glide__wrapper">
                 <div class="glide__track">
-                    <img class="glide__slide" src="images/index-carousel/1.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/2.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/3.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/4.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/5.jpg"/>
+                    <?php
+                    while ($stmt -> fetch()) {
+                        ?>
+                        <img class="glide__slide" src="images.php?id=<?php echo $iid; ?>"/>
+                        <?php
+                    }
+
+                    $stmt -> close();
+                    include 'util/close.php';
+                    ?>
                 </div>
             </div>
 

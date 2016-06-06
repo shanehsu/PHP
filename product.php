@@ -33,20 +33,9 @@
 <body>
 <br>
 <div class="ui container" style="padding-bottom: 2rem;">
-    <div class="ui large menu" style="margin-bottom: 2rem;">
-        <a class="active item">阿寯的美食天地</a>
-        <div class="right menu">
-            <div class="collapsed search item">
-                <div class="ui icon input">
-                    <input type="text" placeholder="關鍵字">
-                    <i class="search link icon"></i>
-                </div>
-            </div>
-            <a class="search trigger ui item"><i class="search link marginless icon"></i></a>
-            <a id="login-modal-show" class="ui item">登入</a>
-            <a id="cart-modal-show" class="ui item">購物車</a>
-        </div>
-    </div>
+    <?php
+    include 'navigation.php';
+    ?>
     <div class="ui breadcrumb">
         <a class="section">總覽</a>
         <i class="right angle icon divider"></i>
@@ -57,34 +46,34 @@
     <!-- Product -->
     <div class="ui items">
         <div class="item">
-        <?php
+            <?php
             include("util/connect.php");
 
-            if (isset($_GET['id']))
-            {
-                $result = $mysqli -> query("select * from products where id = " . intval($_GET['id']));
+            if (isset($_GET['id'])) {
+                $result = $mysqli -> query("SELECT * FROM products WHERE id = " . intval($_GET['id']));
                 $row = mysqli_fetch_row($result);
             }
-        ?>
+            ?>
+
             <a class="ui image">
                 <img src="<?php echo "images.php?id={$row[0]}" ?> ">
             </a>
             <div class="middle aligned content">
                 <?php
-                    echo "<h1 class=\"ui header\">". $row[1] ."</h1>
+                echo "<h1 class=\"ui header\">" . $row[1] . "</h1>
                             <div class=\"meta\">
                                 <div class=\"recent\" style=\"display: inline-block;\">
                                     <i class=\"users icon\"></i>共有XXX人購買
                                 </div>
                                 <span class=\"price quantity separator\"></span>
                                 <div class=\"rating\" style=\"display: inline-block;\">
-                                    <div class=\"ui star rating\" data-rating=\"5\" data-max-rating=\"5\"></div>
+                                    <div class=\"ui star rating\" data-rating=\"" . $row[9] . "\" data-max-rating=\"5\"></div>
                                 </div>
                             </div>
-                        <div class=\"description\"><p>". $row[5] ."</p></div>";               
+                        <div style=\"max-width: 25em;\" class=\"description\"><p>" . $row[5] . "</p></div>";
                 ?>
                 <div class="extra">
-                    <div class="ui blue add to cart button">
+                    <div onclick="addToCart(<?php echo $row[0]; ?>)" class="ui blue add to cart button">
                         <i class="add icon"></i> 加入購物車
                     </div>
                 </div>
@@ -101,6 +90,10 @@
                     </div>
                 </div>
             </div>
+
+            <?php
+            mysqli_free_result($result);
+            ?>
         </div>
     </div>
     <div id="image-carousel">
@@ -127,52 +120,60 @@
         </div>
     </div>
     <div style="display: flex; align-items: stretch; margin-top: 3rem; ">
-        <?php         
-            $ary = explode("\n", $row[6]);
-            $i = 0;
-            echo "<div style=\"width: 40rem;\" class=\"ui very padded segment\"><p>";
+        <?php
+        $ary = explode("\n", $row[6]);
+        $i = 0;
+        echo "<div style=\"width: 40rem;\" class=\"ui very padded segment\"><p>";
 
-            while ($ary[$i] != null) {
-                echo $ary[$i];
-                echo "<p></p>";
-                $i++;
-            }
-            echo "</div>";
-            include("util/close.php");
-            
-        ?>      
+        echo implode("</p><p>", $ary);
+
+
+        echo "</p></div>";
+        ?>
         <div style="padding-left: 2rem; flex-grow: 1; margin: 0;" class="ui comments">
             <h2 class="ui teal header">評論</h2>
-            <div class="comment">
-                <div class="content">
-                    <a class="author">徐鵬鈞</a>
-                    <div class="metadata">
-                        <div class="rating" style="display: inline-block;">
-                            <div class="ui star rating" data-rating="3" data-max-rating="5"></div>
+
+            <?php
+
+            // 載入評論
+            $stmt = $mysqli -> prepare('SELECT group_12.comments.comment, group_12.comments.rating, group_12.comments.date, group_12.member.name
+                FROM group_12.comments, group_12.member
+                WHERE group_12.comments.product = ? AND group_12.comments.member = group_12.member.id');
+
+            $pid = intval($_GET['id']);
+            $stmt -> bind_param('d', $pid);
+            $stmt -> bind_result($comment, $rating, $date, $member);
+            $stmt -> execute();
+            $stmt -> store_result();
+            while ($stmt -> fetch()) {
+                ?>
+                <div class="comment">
+                    <div class="content">
+                        <a class="author"><?php echo $member; ?></a>
+                        <div class="metadata">
+                            <div class="rating" style="display: inline-block;">
+                                <div class="ui star rating" data-rating="<?php echo $rating; ?>" data-max-rating="5"></div>
+                            </div>
+                            <div class="date"><?php echo $date; ?></div>
                         </div>
-                        <div class="date">5 月 30 日</div>
-                    </div>
-                    <div class="text">
-                        <p>還不錯吃。</p>
-                        <p>可以再更新鮮。</p>
+                        <div class="text">
+                            <p>
+                                <?php
+                                $lines = explode("\n", $comment);
+                                echo implode("</p><p>", $lines);
+                                ?>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="comment">
-                <div class="content">
-                    <a class="author">王詳寯</a>
-                    <div class="metadata">
-                        <div class="rating" style="display: inline-block;">
-                            <div class="ui star rating" data-rating="5" data-max-rating="5"></div>
-                        </div>
-                        <div class="date">5 月 30 日</div>
-                    </div>
-                    <div class="text">
-                        <p>幹你娘吃爆。</p>
-                    </div>
-                </div>
-            </div>
-            <form class="ui reply form">
+                <?php
+            }
+            $stmt -> close();
+            
+            include("util/close.php");
+            ?>
+
+            <form class="ui reply form" method="POST" action="comment.php?id=<?php echo intval($_GET['id']); ?>">
                 <div class="field">
                     <textarea name="comment" id="comment"></textarea>
                 </div>
@@ -182,13 +183,16 @@
                 <div class="field rating" style="display: inline-block;">
                     <div id="user-rating" class="ui star rating" data-max-rating="5"></div>
                 </div>
-                <div class="ui primary submit right floated labeled icon button">
+                <button type="submit" class="ui primary submit right floated labeled icon button">
                     <i class="icon edit"></i> 評論
-                </div>
+                </button>
             </form>
         </div>
     </div>
 </div>
+<?php
+include 'modals.php';
+?>
 </body>
 
 </html>

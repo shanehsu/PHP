@@ -1,6 +1,7 @@
 $(function () {
     // 設定元件
     $('.ui.rating').rating('disable')
+
     $('#logout').click(function() {
         $.ajax('ajax/logout.php', {
             async: true,
@@ -9,6 +10,7 @@ $(function () {
             }
         })
     })
+
     $('#login-modal').modal({
         blurring: true,
         onApprove: function (element) {
@@ -33,7 +35,6 @@ $(function () {
                         } else {
                             $('#login-modal form').addClass('error')
                             $('#login-modal div.error.message').text('登入失敗，請檢查帳號密碼。')
-                            // alert('登入失敗，請檢查帳號密碼。')
                             result = false;
                         }
                     }
@@ -47,8 +48,46 @@ $(function () {
         }
     })
     $('#cart-modal').modal({
-        blurring: true
+        blurring: true,
+        onShow: function() {
+            $('#cart-modal div.content').addClass('loading')
+            // 執行 AJAX 取得資料
+            fetchCart(function(cart) {
+                var total = 0
+                $('#cart-modal div.content table tbody').empty();
+                for (var x of cart) {
+                    $('#cart-modal div.content table tbody').append(
+                        $(`<tr class="cartrow" data-id="${x.itemID}">
+                                <td>${x.itemName}</td>
+                                <td class="itemPrice" data-price="${x.itemPrice}">
+                                    $ ${x.itemPrice}
+                                </td>
+                                <td>
+                                    <button class="ui red basic icon button quantity minus" onclick="quantity_minus(${x.itemID})">
+                                        <i class="minus icon"></i>
+                                    </button>
+                                    <span data-quantity="${x.quantity}" class="quantity"></span>
+                                    <button class="ui green basic icon button quantity add" onclick="quantity_plus(${x.itemID})">
+                                        <i class="plus icon"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    $
+                                    <span data-price-subtotal="${x.itemPrice * x.quantity}" class="price subtotal"></span>
+                                </td>
+                            </tr>`
+                        )
+                    )
+
+                    total += x.itemPrice * x.quantity;
+                }
+
+                $('#cart-modal div.content').removeClass('loading')
+                $('#cart-modal span.price.total').attr('data-price-total', total)
+            })
+        }
     })
+
     $('#added-to-cart-modal').modal({
         blurring: true,
         onShow: function () {
@@ -71,7 +110,6 @@ $(function () {
     })
     $('.ui.dropdown').dropdown({
         on: 'hover',
-        // position : 'bottom left'
     })
 
     $('#login-modal-show').click(function () {
@@ -80,47 +118,164 @@ $(function () {
     $('#cart-modal-show').click(function () {
         $('#cart-modal').modal('show')
     })
-    $('.quantity.add').click(function () {
-        var element_quantity = $(this).closest('td').find('span.quantity')
-        var element_subtotal = $(this).closest('tr').find('span.price.subtotal')
-
-        var price_per_item = $(this).closest('tr').find('span.price.per.item').attr('data-price-per-item')
-        var quantity = +element_quantity.attr('data-quantity') + 1
-        var subtotal = +quantity * +price_per_item
-
-        element_quantity.attr('data-quantity', quantity)
-        element_subtotal.attr('data-price-subtotal', subtotal)
-
-        update_total()
-    })
-    $('.quantity.minus').click(function () {
-        var element_quantity = $(this).closest('td').find('span.quantity')
-        var element_subtotal = $(this).closest('tr').find('span.price.subtotal')
-
-        var price_per_item = $(this).closest('tr').find('span.price.per.item').attr('data-price-per-item')
-        var quantity = +element_quantity.attr('data-quantity') - 1
-        if (quantity < 0) {
-            return
-        }
-        var subtotal = +quantity * +price_per_item
-
-        element_quantity.attr('data-quantity', quantity)
-        element_subtotal.attr('data-price-subtotal', subtotal)
-
-        update_total()
-    })
-
     $('.add.to.cart.button').click(function () {
         $('#added-to-cart-modal').modal('show')
     })
 })
 
-function update_total() {
-    var total = 0
-    $('#cart-modal span.price.subtotal').each(function (index, element) {
-        var subtotal = +$(element).attr('data-price-subtotal')
-        total += subtotal
+// Calls callback with response
+function fetchCart(callback) {
+    $.ajax('/ajax/cart.php', {
+        cache: false,
+        success: callback
     })
-
-    $('#cart-modal div.actions #cart-modal-checkout div.hidden.content span.price.total').attr('data-price-total', total)
 }
+
+/**
+ * @param item
+ * @param quantity
+ * @param callback
+ *
+ * @return true of false on callback
+ */
+function updateCartItem(item, quantity, callback) {
+    $.ajax('/ajax/cart.php', {
+        method: 'POST',
+        data: JSON.stringify({
+            action: 'update',
+            itemID: item,
+            quantity: quantity
+        }),
+        contentType: "application/json",
+        async: false,
+        success: function(res) {
+            if (res == 'true') callback(true)
+            else callback(false)
+        },
+        error: function() { callback(false) }
+    })
+}
+
+function addCartItem(item, callback) {
+    $.ajax('/ajax/cart.php', {
+        method: 'POST',
+        data: JSON.stringify({
+            action: 'insert',
+            itemID: item
+        }),
+        contentType: "application/json",
+        async: false,
+        success: function(res) {
+            if (res == 'true') callback(true)
+            else callback(false)
+        },
+        error: function() { callback(false) }
+    })
+}
+
+// function removeCartItem(item, callback) {
+//     $.ajax('/ajax/cart.php', {
+//         method: 'POST',
+//         data: {
+//             action: 'remove',
+//             itemID: item
+//         },
+//         success: function(res) {
+//             if (res == 'true') callback(true)
+//             else callback(false)
+//         },
+//         error: function() { callback(false) }
+//     })
+// }
+//
+// function clearCart(callback) {
+//     $.ajax('/ajax/cart.php', {
+//         method: 'POST',
+//         data: {
+//             action: 'clear'
+//         },
+//         success: function(res) {
+//             if (res == 'true') callback(true)
+//             else callback(false)
+//         },
+//         error: function() { callback(false) }
+//     })
+// }
+
+function quantity_plus(id) {
+    "use strict";
+    var tr = $('#cart-modal tr[data-id=' + id + ']')
+    tr.addClass('dirty')
+
+    var itemPrice = +tr.find('.itemPrice').attr('data-price')
+
+    var quantity = tr.find('span.quantity')
+    quantity.attr('data-quantity', +quantity.attr('data-quantity') + 1);
+
+    var delta = itemPrice;
+
+    var subtotal = tr.find('span.subtotal')
+    subtotal.attr('data-price-subtotal', +subtotal.attr('data-price-subtotal') + delta)
+    var total = $('#cart-modal span.total')
+    total.attr('data-price-total', +total.attr('data-price-total') + delta)
+}
+
+function quantity_minus(id) {
+    "use strict";
+    var tr = $('#cart-modal tr[data-id=' + id + ']')
+    var quantity = tr.find('span.quantity')
+    if (+quantity.attr('data-quantity') == 0) { return }
+
+    tr.addClass('dirty')
+
+    var itemPrice = +tr.find('.itemPrice').attr('data-price')
+
+    quantity.attr('data-quantity', +quantity.attr('data-quantity') - 1);
+
+    var delta = -itemPrice;
+
+    var subtotal = tr.find('span.subtotal')
+    subtotal.attr('data-price-subtotal', +subtotal.attr('data-price-subtotal') + delta)
+    var total = $('#cart-modal span.total')
+    total.attr('data-price-total', +total.attr('data-price-total') + delta)
+}
+
+function updateCart(callback) {
+    "use strict";
+
+    $('#cart-modal tr.dirty').each(function(i, row) {
+        var row = $(row)
+
+        var id = +row.attr('data-id')
+        console.dir(row)
+        var quantity = +row.find('span.quantity').attr('data-quantity')
+
+        updateCartItem(id, quantity, function(result) {
+            if (result) {
+                console.log('成功')
+                row.removeClass('dirty')
+            }
+            else {
+                console.log('失敗')
+            }
+        })
+
+        if (callback) callback()
+    })
+}
+
+function addToCart(id) {
+    "use strict";
+    addCartItem(id, function() {
+        $('#added-to-cart-modal').modal('show')
+    })
+}
+
+function checkout() {
+    "use strict";
+    updateCart(function() {
+        // 在這裡導向好了！
+    })
+}
+
+// Cart ID -> cart-modal

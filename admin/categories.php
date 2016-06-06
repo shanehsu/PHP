@@ -1,4 +1,3 @@
-<pre>
 <?php
 include("connect.php");
 
@@ -66,14 +65,8 @@ foreach ($categories as &$category) {
 
 unset($category);
 
-if ($debug) {
-    // print_r($categories);
-}
-
 include("close.php");
 ?>
-</pre>
-
 
 <!DOCTYPE html>
 <html>
@@ -86,22 +79,6 @@ include("close.php");
     <script src="../semantic/semantic.js"></script>
 
     <script>
-        function add_new(id) {
-            // 導向至新增畫面
-        }
-
-        function edit(id) {
-            // 導向到編輯畫面
-        }
-
-        function del(id) {
-            // 導向到刪除畫面
-        }
-
-        /*
-         * 在 div 上面用 add_new(3) 或是 edit(5) 或是 del(5) 這樣
-         * 之後用 location.href('edit_category.php?id=4') 寫在 JavaScript 函數內進行導向
-         */
     </script>
 
     <style>
@@ -126,7 +103,7 @@ include("close.php");
     <!-- 標題 -->
     <h1 class="ui teal header">
         分類
-        <div class="ui right floated positive button" onclick="add_new('new')">新增</div>
+        <div class="ui right floated positive button" onclick="">新增</div>
     </h1>
 
 
@@ -150,14 +127,25 @@ include("close.php");
                 </div>
 
                 <?php
-                if ($hasProduct) {
+                if (!$hasProduct) {
                     ?>
                     <div class="ui bottom attached buttons">
                         <div class="ui negative button"
                              onclick="location.href='<?php echo "delete_categories.php?id=" . $category["id"]; ?>'">
                             刪除該類別
                         </div>
+                        <div class="ui grey bottom attached button"
+                             onclick="location.href='<?php echo "edit_category.php?id=" . $category["id"]; ?>'">
+                            編輯該類別
+                        </div>
                         <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="ui bottom attached button"
+                         onclick="location.href='<?php echo "edit_category.php?id=" . $category["id"]; ?>'">
+                        編輯該類別
                     </div>
                     <?php
                 }
@@ -194,8 +182,19 @@ include("close.php");
                                          onclick="location.href='<?php echo "delete_categories.php?id=" . $child["id"]; ?>'">
                                         刪除該類別
                                     </div>
+                                    <div class="ui grey bottom attached button"
+                                         onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
+                                        編輯該類別
+                                    </div>
                                     <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別
                                     </div>
+                                </div>
+                                <?php
+                            } else {
+                                ?>
+                                <div class="ui grey bottom attached button"
+                                     onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
+                                    編輯該類別
                                 </div>
                                 <?php
                             }
@@ -203,6 +202,10 @@ include("close.php");
                             <?php
                         }
                         ?>
+                    </div>
+                    <div class="ui grey bottom attached button"
+                         onclick="location.href='<?php echo "edit_category.php?id=" . $category["id"]; ?>'">
+                        編輯該類別
                     </div>
                 </div>
                 <?php
@@ -244,28 +247,39 @@ include("close.php");
 
                                     if (!$hasProduct) {
                                         ?>
-
-                                        <div class="ui negative bottom attached button"
-                                             onclick="location.href='<?php echo "delete_categories.php?id=" . $grandchild["id"]; ?>'">
-                                            刪除該類別
+                                        <div class="ui bottom attached buttons">
+                                            <div class="ui grey bottom attached button"
+                                                 onclick="location.href='<?php echo "edit_category.php?id=" . $grandchild["id"]; ?>'">
+                                                編輯該類別
+                                            </div>
+                                            <div class="ui negative bottom attached button"
+                                                 onclick="location.href='<?php echo "delete_categories.php?id=" . $grandchild["id"]; ?>'">
+                                                刪除該類別
+                                            </div>
                                         </div>
 
                                         <?php
                                     }
-
-                                    $hasProduct = 1;
 
                                     ?>
 
 
                                     <?php
                                 }
-                                ?></div>
-
+                                ?>
+                            </div>
+                            <div class="ui grey bottom attached button"
+                                 onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
+                                編輯該類別
+                            </div>
 
                             <?php
                         }
                         ?>
+                    </div>
+                    <div class="ui grey bottom attached button"
+                         onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
+                        編輯該類別
                     </div>
                 </div>
 

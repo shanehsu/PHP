@@ -33,7 +33,7 @@
     <div class="header">
         購物車
     </div>
-    <div class="content">
+    <div class="ui basic segment content">
         <table class="ui tablet stackable table">
             <thead>
             <tr>
@@ -44,76 +44,16 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>小白菜</td>
-                <td>
-                    <span class="dollar unit"></span>
-                    <span data-price-per-item="39" class="price per item"></span>
-                </td>
-                <td>
-                    <button class="ui red basic icon button quantity minus">
-                        <i class="minus icon"></i>
-                    </button>
-                    <span data-quantity="4" class="quantity"></span>
-                    <button class="ui green basic icon button quantity add">
-                        <i class="plus icon"></i>
-                    </button>
-                </td>
-                <td>
-                    <span class="dollar unit"></span>
-                    <span data-price-subtotal="156" class="price subtotal"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>油菜</td>
-                <td>
-                    <span class="dollar unit"></span>
-                    <span data-price-per-item="37" class="price per item"></span>
-                </td>
-                <td>
-                    <button class="ui red basic icon button quantity minus">
-                        <i class="minus icon"></i>
-                    </button>
-                    <span data-quantity="2" class="quantity"></span>
-                    <button class="ui green basic icon button quantity add">
-                        <i class="plus icon"></i>
-                    </button>
-                </td>
-                <td>
-                    <span class="dollar unit"></span>
-                    <span data-price-subtotal="77" class="price subtotal"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>小黃瓜</td>
-                <td>
-                    <span class="dollar unit"></span>
-                    <span data-price-per-item="75" class="price per item"></span>
-                </td>
-                <td>
-                    <button class="ui red basic icon button quantity minus">
-                        <i class="minus icon"></i>
-                    </button>
-                    <span data-quantity="6" class="quantity"></span>
-                    <button class="ui green basic icon button quantity add">
-                        <i class="plus icon"></i>
-                    </button>
-                </td>
-                <td>
-                    <span class="dollar unit"></span>
-                    <span data-price-subtotal="450" class="price subtotal"></span>
-                </td>
-            </tr>
             </tbody>
         </table>
     </div>
     <div class="actions">
-        <div id="cart-modal-update" class="approve ui green basic button">更新</div>
+        <div id="cart-modal-update" class="approve ui green basic button" onclick="updateCart()">更新</div>
         <div id="cart-modal-checkout" class="approve ui animated fade blue button">
-            <div class="visible content">結帳</div>
+            <div class="visible content" onclick="checkout()">結帳</div>
             <div class="hidden content">
                 <span class="dollar unit"></span>
-                <span class="price total" data-price-total="683"></span>
+                <span class="price total" data-price-total=""></span>
             </div>
         </div>
     </div>
