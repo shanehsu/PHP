@@ -1,4 +1,8 @@
 <?php
+include './../util/UserAuthenticationRequired.php';
+?>
+
+<?php
 include './../util/connect.php';
 
 session_start();

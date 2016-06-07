@@ -40,9 +40,9 @@
     include("util/connect.php");
 
     $pid = intval($_GET['id']);
-    $stmt_p = $mysqli -> prepare('SELECT categories FROM group_12.products WHERE id = ?');
+    $stmt_p = $mysqli -> prepare('SELECT name, categories FROM group_12.products WHERE id = ?');
     $stmt_p -> bind_param('d', $pid);
-    $stmt_p -> bind_result($current_cid);
+    $stmt_p -> bind_result($pname, $current_cid);
     $stmt_p -> execute();
     $stmt_p -> fetch();
     $stmt_p -> close();
@@ -85,13 +85,15 @@
 
         for ($i = 0; $i < $length - 1; $i ++) {
             ?>
-            <a class="section"><?=$traversal[$i]['name']?></a>
+            <span class="section"><?=$traversal[$i]['name']?></span>
             <i class="right angle icon divider"></i>
             <?php
         }
         ?>
 
-        <div class="active section"><?=$traversal[$length - 1]['name']?></div>
+        <a href="category.php?id=<?=$traversal[$length-1]['id']?>" class="section"><?=$traversal[$length - 1]['name']?></a>
+        <i class="right angle icon divider"></i>
+        <div class="active section"><?= $pname  ?></div>
     </div>
     <!-- Product -->
     <div class="ui items">
@@ -114,13 +116,17 @@
         // 近期購買
         $stmtr = $mysqli -> prepare('SELECT SUM(quantity) 
             FROM group_12.receipt, group_12.receipt_item, group_12.products
-            WHERE products.id = ? AND products.name = receipt_item.item_name AND receipt.id = receipt_item.receipt AND receipt.ordered >= DATE_ADD(CURDATE(), INTERVAL -3 DAY) ');
+            WHERE products.id = ? AND products.id = receipt_item.item_id AND receipt.id = receipt_item.receipt AND receipt.ordered >= DATE_ADD(CURDATE(), INTERVAL -3 DAY) ');
         $pid = intval($_GET['id']);
         $stmtr -> bind_param('d', $pid);
         $stmtr -> bind_result($recent);
         $stmtr -> execute();
         $stmtr -> fetch();
         $stmtr -> close();
+
+        if (is_null($recent)) {
+            $recent = 0;
+        }
 
         if (isset($_GET['id'])) {
             $result = $mysqli -> query("SELECT * FROM products WHERE id = " . intval($_GET['id']));
@@ -252,8 +258,9 @@
             $stmt -> bind_param('d', $pid);
             $stmt -> bind_result($comment, $rating, $date, $member);
             $stmt -> execute();
-            $stmt -> store_result();
+
             while ($stmt -> fetch()) {
+                echo 'some comment here!';
                 ?>
                 <div class="comment">
                     <div class="content">
@@ -280,21 +287,26 @@
             
             include("util/close.php");
             ?>
-
-            <form class="ui reply form" method="POST" action="comment.php?id=<?php echo intval($_GET['id']); ?>">
-                <div class="field">
-                    <textarea name="comment" id="comment"></textarea>
-                </div>
-                <div class="field">
-                    <input type="hidden" name="rating" id="rating"/>
-                </div>
-                <div class="field rating" style="display: inline-block;">
-                    <div id="user-rating" class="ui star rating" data-max-rating="5"></div>
-                </div>
-                <button type="submit" class="ui primary submit right floated labeled icon button">
-                    <i class="icon edit"></i> 評論
-                </button>
-            </form>
+            <?php
+            if ($authenticated) {
+                ?>
+                <form class="ui reply form" method="POST" action="comment.php?id=<?php echo intval($_GET['id']); ?>">
+                    <div class="field">
+                        <textarea name="comment" id="comment"></textarea>
+                    </div>
+                    <div class="field">
+                        <input type="hidden" name="rating" id="rating"/>
+                    </div>
+                    <div class="field rating" style="display: inline-block;">
+                        <div id="user-rating" class="ui star rating" data-max-rating="5"></div>
+                    </div>
+                    <button type="submit" class="ui primary submit right floated labeled icon button">
+                        <i class="icon edit"></i> 評論
+                    </button>
+                </form>
+                <?php
+            }
+            ?>
         </div>
     </div>
 </div>

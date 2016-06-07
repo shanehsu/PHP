@@ -11,6 +11,16 @@ include "AdminAuthenticationRequired.php";
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
     <script src="../scripts/jquery-2.2.2.js"></script>
     <script src="../semantic/semantic.js"></script>
+
+    <style>
+        td.actions > a {
+            min-width: 5em;
+        }
+        td.actions > a:not(:first-child) {
+            border-left: 2px solid #a333c8;
+            padding-left: 4px;
+        }
+    </style>
 </head>
 <body>
 <div class="ui container">
@@ -29,6 +39,22 @@ include "AdminAuthenticationRequired.php";
     ?>
 
     <?php
+    function category_count($categoryID) {
+        global $mysqli;
+        $stmt = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.products WHERE categories = ' . intval($categoryID));
+        $stmt -> bind_result($c);
+        $stmt -> execute();
+        $stmt -> fetch();
+
+        if (is_null($c) || !isset($c)){
+            $c = 0;
+        }
+
+        return $c;
+    }
+    ?>
+
+    <?php
     $result = $mysqli->query("SELECT * FROM categories WHERE parent IS NULL");
     $total = mysqli_num_rows($result);
     $categories = array();
@@ -44,6 +70,17 @@ include "AdminAuthenticationRequired.php";
             "children" => array()
         ));
     }
+
+    mysqli_free_result($result);
+
+    foreach ($categories as &$category) {
+        echo 'Iterating ' . $category['name'] . '<br/>';
+        $id = $category['id'];
+        $category['item'] = category_count($id);
+        $category['siblingHasItems'] = false;
+    }
+
+    unset($category);
 
     function organize($id)
     {
@@ -65,6 +102,24 @@ include "AdminAuthenticationRequired.php";
                 "children" => array()
             ));
         }
+        mysqli_free_result($result);
+
+        $someHasItems = false;
+
+        foreach ($data as &$category) {
+            $id = $category['id'];
+            $category['item'] = category_count($id);
+
+            if ($category['item'] > 0) {
+                $someHasItems = true;
+            }
+        }
+
+        foreach ($data as &$category) {
+            $category['siblingHasItems'] = $someHasItems;
+        }
+
+        unset($category);
 
         return $data;
     }
@@ -91,28 +146,15 @@ include "AdminAuthenticationRequired.php";
     unset($category);
 
     ?>
-
+    <pre>
     <?php
-    print_r($categories);
+    print_r(json_encode($categories, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     ?>
-    <?php
-    function category_count($categoryID) {
-        include './../util/connect.php';
+    </pre>
 
-        $stmt = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.products WHERE categories = ' . intval($categoryID));
-        $stmt -> bind_result($c);
-        $stmt -> execute();
-        $stmt -> fetch();
-
-        include './../util/close.php';
-
-        return $c;
-    }
-    ?>
     <?php
     // 先自己，再小孩
     function render($depth, array $self) {
-        $catcount = category_count($self['id']);
         ?>
         <tr>
             <?php
@@ -122,21 +164,21 @@ include "AdminAuthenticationRequired.php";
                 <?php
             }
             ?>
-            <td colspan="<?=(4 - $depth)?>"><?=$self['name']?></td>
-            <td><?=$catcount?></td>
-            <td>
+            <td colspan="<?=(3 - $depth)?>"><?=$self['name']?></td>
+            <td><?=$self['item']?></td>
+            <td class="actions">
                 <?php
-                if ($depth != 2 && $catcount == 0 || !empty($self['children'])) {
+                if ($depth != 2 && $self['item'] == 0 || !empty($self['children'])) {
                     ?>
-                    <a href="category_new.php?id=<?$self['id']?>">新增子分類</a>
+                    <a href="category_new.php?id=<?=$self['id']?>">新增子分類</a>
                     <?php
                 }
                 ?>
-                <a href="category_edit.php?id=<?$self['id']?>">編輯名稱</a>
+                <a href="category_edit.php?id=<?=$self['id']?>">編輯名稱</a>
                 <?php
-                if ($catcount == 0 && empty($self['children'])) {
+                if ($self['item'] == 0 && empty($self['children']) && !$self['siblingHasItems']) {
                     ?>
-                    <a href="category_delete.php?id=<?$self['id']?>">刪除分類</a>
+                    <a href="category_delete.php?id=<?=$self['id']?>">刪除分類</a>
                     <?php
                 }
                 ?>
@@ -158,7 +200,7 @@ include "AdminAuthenticationRequired.php";
         <table class="ui celled structured table">
             <thead>
             <tr>
-                <th colspan="4">名稱</th>
+                <th colspan="3">名稱</th>
                 <th style="width: 25%;">產品數量</th>
                 <th style="width: 25%;">動作</th>
             </tr>

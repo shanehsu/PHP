@@ -48,8 +48,8 @@ $recv = $_POST['recipient'];
     $stmt -> close();
 
     // 丟購物車的東西進去！
-    $stmt = $mysqli -> prepare('INSERT INTO group_12.receipt_item (receipt, item_name, item_price, quantity)
-      SELECT ?, products.name, products.price, quantity FROM group_12.products, group_12.cart
+    $stmt = $mysqli -> prepare('INSERT INTO group_12.receipt_item (receipt, item_name, item_price, item_id, quantity)
+      SELECT ?, products.name, products.price, products.id, quantity FROM group_12.products, group_12.cart
       WHERE cart.item = products.id AND cart.member = ?');
 
     $stmt -> bind_param('dd', $receiptID, $uid);
