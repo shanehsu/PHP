@@ -218,7 +218,21 @@ include("util/close.php");
     <div class="ui top attached tabular menu">
         <a class="active item" data-tab="profile">會員資料</a>
         <a class="item" data-tab="orders">訂單
-            <div class="circular floating ui red label">1</div>
+            <?php
+            include 'util/connect.php';
+            $count_stmt = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.receipt WHERE member = ? AND paid = 0');
+            $count_stmt -> bind_param('d', $uid);
+            $count_stmt -> bind_result($unpaid);
+            $count_stmt -> execute();
+            $count_stmt -> fetch();
+            $count_stmt -> close();
+            include 'util/close.php';
+            if ($unpaid != 0) {
+                ?>
+                <div class="circular floating ui red label"><?= $unpaid ?></div>
+                <?php
+            }
+            ?>
         </a>
     </div>
     <div class="ui bottom attached segment">
@@ -260,61 +274,68 @@ include("util/close.php");
         </div>
         <div class="ui tab" data-tab="orders">
             <div class="ui divided items">
-                <div class="item" style="align-items: center;">
-                    <div class="content">
-                        <div class="header">訂單編號 #1</div>
-                        <div class="meta">
-                            <span>總金額：</span><span class="dollar unit"></span>
-                            <span data-price-per-item="1830" class="price per item"></span>
-                            <span class="price quantity separator"></span>
-                            <span class="date">5 月 31 日</span>
+                <?php
+                include "util/connect.php";
+
+                $receipt_stmt = $mysqli -> prepare('SELECT receipt.id, DATE_FORMAT(receipt.ordered, \'%c 月 %e 日\'), receipt.paid,
+                    GROUP_CONCAT(receipt_item.item_name SEPARATOR \'、\'), SUM(receipt_item.item_price * receipt_item.quantity) 
+                    FROM group_12.receipt, group_12.receipt_item 
+                    WHERE receipt_item.receipt = receipt.id AND receipt.member = ?
+                    GROUP BY receipt.id
+                    ORDER BY receipt.paid ASC, receipt.id DESC');
+
+                $receipt_stmt -> bind_param('d', $uid);
+                $receipt_stmt -> bind_result($rid, $rdate, $rpaid, $ritems, $rsum);
+                $receipt_stmt -> execute();
+
+                ?>
+
+                <?php
+                while ($receipt_stmt -> fetch()) {
+                    ?>
+                    <div class="item" style="align-items: center;">
+                        <div class="content">
+                            <div class="header">訂單編號 #<?=$rid?></div>
+                            <div class="meta">
+                                <span>總金額：</span>
+                                <span class="dollar unit"></span>
+                                <span class="price per item"><?=$rsum?></span>
+                                <span class="price quantity separator"></span>
+                                <span class="date"><?=$rdate?></span>
+                            </div>
+                            <div class="description">
+                                <?=$ritems?>
+                            </div>
+                            <div class="extra">
+                                <?php
+                                if ($rpaid == 0) {
+                                    ?>
+                                    <a href="pay.php?id=<?=$rid?>">立即付款</a>
+                                    <?php
+                                }
+                                ?>
+                                <a href="receipt.php?id=<?=$rid?>">詳細資訊</a>
+                            </div>
                         </div>
-                        <div class="description">
-                            甘藍菜、蘋果、鳳梨釋迦
-                        </div>
-                        <div class="extra">
-                            <a>立即付款</a>
-                            <a>詳細資訊</a>
-                        </div>
+                        <?php
+                        if ($rpaid == 0) {
+                            ?>
+                            <span class="ui red label status">未付款</span>
+                            <?php
+                        } else {
+                            ?>
+                            <span class="ui green label status">已付款</span>
+                            <?php
+                        }
+                        ?>
                     </div>
-                    <span class="ui red label status">未付款</span>
-                </div>
-                <div class="item" style="align-items: center;">
-                    <div class="content">
-                        <div class="header">訂單編號 #1</div>
-                        <div class="meta">
-                            <span>總金額：</span><span class="dollar unit"></span>
-                            <span data-price-per-item="1830" class="price per item"></span>
-                            <span class="price quantity separator"></span>
-                            <span class="date">5 月 31 日</span>
-                        </div>
-                        <div class="description">
-                            甘藍菜、蘋果、鳳梨釋迦
-                        </div>
-                        <div class="extra">
-                            <a>詳細資訊</a>
-                        </div>
-                    </div>
-                    <span class="ui green label status">已付款</span>
-                </div>
-                <div class="item" style="align-items: center;">
-                    <div class="content">
-                        <div class="header">訂單編號 #1</div>
-                        <div class="meta">
-                            <span>總金額：</span><span class="dollar unit"></span>
-                            <span data-price-per-item="1830" class="price per item"></span>
-                            <span class="price quantity separator"></span>
-                            <span class="date">5 月 31 日</span>
-                        </div>
-                        <div class="description">
-                            甘藍菜、蘋果、鳳梨釋迦
-                        </div>
-                        <div class="extra">
-                            <a>詳細資訊</a>
-                        </div>
-                    </div>
-                    <span class="ui green label status">已付款</span>
-                </div>
+                    <?php
+                }
+                ?>
+                <?php
+                $receipt_stmt -> close();
+                include "util/close.php";
+                ?>
             </div>
         </div>
     </div>

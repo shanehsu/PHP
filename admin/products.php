@@ -1,3 +1,7 @@
+<?php
+include "AdminAuthenticationRequired.php";
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,11 +55,11 @@
         <tr>
             <th>ID</th>
             <th>縮圖</th>
-            <th>名稱</th>
-            <th>販售方式</th>
+            <th style="min-width: 8em;">名稱</th>
+            <th style="min-width: 10em;">販售方式</th>
             <th>敘述</th>
-            <th>分類</th>
-            <th>動作</th>
+            <th style="min-width: 5em;">分類</th>
+            <th style="min-width: 5em;">動作</th>
         </tr>
         </thead>
         <tbody>
@@ -82,8 +86,8 @@
                     <?php echo $categories[$cat]; ?>
                 </td>
                 <td class="center aligned">
-                    <a href="edit_product.php?id=<?php echo $id; ?>">編輯</a>
-                    <a href="delete_product.php?id=<?php echo $id; ?>">刪除</a>
+                    <a href="product_edit.php?id=<?php echo $id; ?>">編輯</a>
+                    <a href="product_delete.php?id=<?php echo $id; ?>">刪除</a>
                 </td>
             </tr>
             <?php
@@ -94,7 +98,7 @@
         <tfoot class="full-width">
         <tr>
             <th class="right aligned" colspan="7">
-                <a href="new_product.php">新增產品</a>
+                <a href="product_new.php">新增產品</a>
             </th>
         </tr>
         </tfoot>

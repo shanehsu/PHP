@@ -34,6 +34,14 @@ $_ADMIN_NAVIGATION_CONFIGURATION = array(
     array(
         'name' => '評論',
         'href' => 'comments'
+    ),
+    array(
+        'name' => '訂單',
+        'href' => 'receipts'
+    ),
+    array(
+        'name' => '登出',
+        'href' => 'logout'
     )
 );
 

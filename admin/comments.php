@@ -1,4 +1,8 @@
 <?php
+include "AdminAuthenticationRequired.php";
+?>
+
+<?php
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
     // 刪除吧

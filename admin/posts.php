@@ -1,3 +1,7 @@
+<?php
+include "AdminAuthenticationRequired.php";
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +23,7 @@
 
     <h1 class="ui teal header">
         公告
-        <div class="ui right floated positive button"><a href="new_post.php">新增</a></div>
+        <div class="ui right floated positive button"><a href="post_new.php">新增</a></div>
     </h1>
     <div class="ui items">
         <?php
@@ -41,8 +45,8 @@
                 </a>
                 <div class="extra">
                     <div class="ui right floated buttons">
-                        <div class="ui button"><a href="<?php echo "edit_post.php?id=$row[0]" ?>">編輯</a></div>
-                        <div class="ui negative button"><a href="<?php echo "delete_post.php?id=$row[0]" ?>">刪除</a></div>
+                        <div class="ui button"><a href="<?php echo "post_edit.php?id=$row[0]" ?>">編輯</a></div>
+                        <div class="ui negative button"><a href="<?php echo "post_delete.php?id=$row[0]" ?>">刪除</a></div>
                     </div>
                 </div>
             </div> 

@@ -1,3 +1,7 @@
+<?php
+include "AdminAuthenticationRequired.php";
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,7 +71,7 @@
                 ?>
             </td>
             <td class="center aligned">
-                <a href="<?php echo "delete_img.php?id=$row[0]" ?>">刪除</a>
+                <a href="<?php echo "statics_delete.php?id=$row[0]" ?>">刪除</a>
             </td>
         </tr>
         <?php
@@ -78,7 +82,7 @@
         <tfoot class="full-width">
         <tr>
             <th class="right aligned" colspan="5">
-                <a href="upload_file.php">上傳</a>
+                <a href="statics_new.php">上傳</a>
             </th>
         </tr>
         </tfoot>

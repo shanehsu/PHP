@@ -75,6 +75,11 @@ $(function () {
                                     $
                                     <span data-price-subtotal="${x.itemPrice * x.quantity}" class="price subtotal"></span>
                                 </td>
+                                <td>
+                                    <button class="ui inverted red icon button" onclick="quantity_zero(${x.itemID})">
+                                        移除
+                                    </button>
+                                </td>
                             </tr>`
                         )
                     )
@@ -121,6 +126,18 @@ $(function () {
     $('.add.to.cart.button').click(function () {
         $('#added-to-cart-modal').modal('show')
     })
+
+    $.api.settings.api = {
+        cache: false,
+        search: '/ajax/search.php?query={query}'
+    }
+
+    $('.ui.search')
+        .search({
+            type: 'category',
+            verbose: true
+        })
+    ;
 })
 
 // Calls callback with response
@@ -208,7 +225,10 @@ function clearCart(callback) {
             action: 'clear'
         }),
         success: function(res) {
-            if (res == 'true') callback(true)
+            if (res == 'true') {
+                $('#cart-modal div.content table tbody').empty()
+                $('#added-to-cart-modal').modal('hide')
+            }
             else callback(false)
         },
         error: function() { callback(false) }
@@ -253,6 +273,25 @@ function quantity_minus(id) {
     total.attr('data-price-total', +total.attr('data-price-total') + delta)
 }
 
+function quantity_zero(id) {
+    "use strict";
+    var tr = $('#cart-modal tr[data-id=' + id + ']')
+    var quantity = tr.find('span.quantity')
+
+    tr.addClass('dirty')
+
+    var itemPrice = +tr.find('.itemPrice').attr('data-price')
+
+    quantity.attr('data-quantity', 0);
+
+    var subtotal = tr.find('span.subtotal')
+    var total = $('#cart-modal span.total')
+    total.attr('data-price-total', +total.attr('data-price-total') - +subtotal.attr('data-price-subtotal'))
+
+    subtotal.attr('data-price-subtotal', 0)
+
+}
+
 function updateCart(callback) {
     "use strict";
 
@@ -272,9 +311,8 @@ function updateCart(callback) {
                 console.log('失敗')
             }
         })
-
-        if (callback) callback()
     })
+    if (callback) callback()
 }
 
 function addToCart(id) {
@@ -287,7 +325,7 @@ function addToCart(id) {
 function checkout() {
     "use strict";
     updateCart(function() {
-        // 在這裡導向好了！
+        window.location.assign('checkout.php')
     })
 }
 

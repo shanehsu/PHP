@@ -1,4 +1,3 @@
-<pre>
 <?php
 include("connect.php");
 
@@ -71,7 +70,6 @@ if ($debug) {
 
 include("close.php");
 ?>
-</pre>
 
 <div class="ui vertical menu" style="max-width: 30rem;">
     <?php

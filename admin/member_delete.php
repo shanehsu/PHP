@@ -1,4 +1,8 @@
 <?php
+include "AdminAuthenticationRequired.php";
+?>
+
+<?php
 
 include './../util/connect.php';
 

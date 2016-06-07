@@ -1,4 +1,8 @@
 <?php
+include "AdminAuthenticationRequired.php";
+?>
+
+<?php
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $action = $_GET['action'];
     $id = intval($_GET['id']);

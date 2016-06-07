@@ -1,71 +1,5 @@
 <?php
-include("./../util/connect.php");
-
-$debug = true;
-
-$result = $mysqli->query("SELECT * FROM categories WHERE parent IS NULL");
-$total = mysqli_num_rows($result);
-$categories = array();
-
-
-for ($i = 0; $i < $total; $i++) {
-    $row = mysqli_fetch_row($result);
-
-    array_push($categories, array(
-        "name" => $row[1],
-        "id" => $row[0],
-        "parent" => $row[2],
-        "depth" => 0,
-        "children" => array()
-    ));
-}
-
-function organize($id)
-{
-    global $mysqli;
-    $result = $mysqli->query("select * from categories where parent = {$id}");
-    if ($result == false) {
-        return array();
-    }
-    $row_count = mysqli_num_rows($result);
-    $data = array();
-    for ($i = 0; $i < $row_count; $i++) {
-        $row = mysqli_fetch_row($result);
-
-        array_push($data, array(
-            "name" => $row[1],
-            "id" => $row[0],
-            "parent" => $row[2],
-            "depth" => 0,
-            "children" => array()
-        ));
-    }
-
-    return $data;
-}
-
-function recurseOnCategory(array &$category)
-{
-    $category["children"] = organize($category["id"]);
-    $depth = 1;
-    foreach ($category["children"] as $key => &$value) {
-        $newDepth = recurseOnCategory($value) + 1;
-        if ($newDepth > $depth) {
-            $depth = $newDepth;
-        }
-    }
-
-    $category["depth"] = $depth;
-    return $depth;
-}
-
-foreach ($categories as &$category) {
-    recurseOnCategory($category);
-}
-
-unset($category);
-
-include("./../util/close.php");
+include "AdminAuthenticationRequired.php";
 ?>
 
 <!DOCTYPE html>
@@ -77,21 +11,6 @@ include("./../util/close.php");
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
     <script src="../scripts/jquery-2.2.2.js"></script>
     <script src="../semantic/semantic.js"></script>
-
-    <script>
-    </script>
-
-    <style>
-        /* 顯示 Segment 之間的邊線 */
-        .ui.attached + .ui.attached.segment:not(.top) {
-            border-top: 1px solid rgba(34, 36, 38, 0.15);
-        }
-
-        /* 增加階層的感覺 */
-        .ui.segments > .segment + .segments:not(.horizontal) {
-            margin-left: 3em;
-        }
-    </style>
 </head>
 <body>
 <div class="ui container">
@@ -103,194 +22,166 @@ include("./../util/close.php");
     <!-- 標題 -->
     <h1 class="ui teal header">
         分類
-        <div class="ui right floated positive button" onclick="">新增</div>
     </h1>
-
 
     <?php
     include './../util/connect.php';
+    ?>
 
-    foreach ($categories as $category) {
-        switch ($category['depth']) {
-            case 1:
+    <?php
+    $result = $mysqli->query("SELECT * FROM categories WHERE parent IS NULL");
+    $total = mysqli_num_rows($result);
+    $categories = array();
 
-                $result = $mysqli->query("SELECT * FROM products WHERE categories = " . $category['id']);
-                $count = mysqli_num_rows($result);
-                $hasProduct = mysqli_num_rows($result) > 0;
-                mysqli_free_result($result);
-                ?>
-                <div class="ui attached padded segment">
-                    <p>
-                        <span><?php echo $category["name"]; ?></span>
-                        <span style="float: right;">共有 <?php echo $count; ?> 項商品</span>
-                    </p>
-                </div>
+    for ($i = 0; $i < $total; $i++) {
+        $row = mysqli_fetch_row($result);
 
-                <?php
-                if (!$hasProduct) {
-                    ?>
-                    <div class="ui bottom attached buttons">
-                        <div class="ui negative button"
-                             onclick="location.href='<?php echo "delete_categories.php?id=" . $category["id"]; ?>'">
-                            刪除該類別
-                        </div>
-                        <div class="ui grey bottom attached button"
-                             onclick="location.href='<?php echo "edit_category.php?id=" . $category["id"]; ?>'">
-                            編輯該類別
-                        </div>
-                        <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別</div>
-                    </div>
-                    <?php
-                } else {
-                    ?>
-                    <div class="ui bottom attached button"
-                         onclick="location.href='<?php echo "edit_category.php?id=" . $category["id"]; ?>'">
-                        編輯該類別
-                    </div>
-                    <?php
-                }
-                break;
-            case 2:
-                ?>
-                <div class="ui padded segments">
-                    <div class="ui padded segment">
-                        <p>
-                            <span><?php echo $category["name"]; ?></span>
-                        </p>
-                    </div>
-                    <div class="ui attached padded segments">
-                        <?php
-                        foreach ($category["children"] as $child) {
-                            $result = $mysqli->query("SELECT * FROM products WHERE categories = " . $child['id']);
-                            $count = mysqli_num_rows($result);
-                            $hasProduct = mysqli_num_rows($result) > 0;
-                            mysqli_free_result($result);
-                            ?>
-                            <div class="ui padded segment">
-                                <p>
-                                    <span><?php echo $child["name"] ?></span>
-                                    <span style="float: right;">共有 <?php echo $count; ?> 項商品</span>
-                                </p>
-                            </div>
-
-                            <?php
-
-                            if (!$hasProduct) {
-                                ?>
-                                <div class="ui bottom attached buttons">
-                                    <div class="ui negative button"
-                                         onclick="location.href='<?php echo "delete_categories.php?id=" . $child["id"]; ?>'">
-                                        刪除該類別
-                                    </div>
-                                    <div class="ui grey bottom attached button"
-                                         onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
-                                        編輯該類別
-                                    </div>
-                                    <div class="ui positive button" onclick="location.href='new_category.php'">新增子類別
-                                    </div>
-                                </div>
-                                <?php
-                            } else {
-                                ?>
-                                <div class="ui grey bottom attached button"
-                                     onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
-                                    編輯該類別
-                                </div>
-                                <?php
-                            }
-                            ?>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                    <div class="ui grey bottom attached button"
-                         onclick="location.href='<?php echo "edit_category.php?id=" . $category["id"]; ?>'">
-                        編輯該類別
-                    </div>
-                </div>
-                <?php
-                break;
-            case 3:
-                ?>
-
-                <div class="ui padded segments">
-                    <div class="ui padded segment">
-                        <p>
-                            <span><?php echo $category["name"]; ?></span>
-                        </p>
-                    </div>
-                    <div class="ui attached padded segments">
-                        <?php
-                        foreach ($category["children"] as $child) {
-                            ?>
-                            <div class="ui padded segment">
-                                <p>
-                                    <span><?php echo $child["name"]; ?></span>
-                                </p>
-                            </div>
-                            <div class="ui attached padded segments">
-                                <?php
-                                foreach ($child["children"] as $grandchild) {
-                                    $result = $mysqli->query("SELECT * FROM products WHERE categories = " . $child['id']);
-                                    $count = mysqli_num_rows($result);
-                                    $hasProduct = mysqli_num_rows($result) > 0;
-                                    mysqli_free_result($result);
-                                    ?>
-
-                                    <div class="ui padded segment">
-                                        <p>
-                                            <span><?php echo $grandchild["name"]; ?></span>
-                                            <span style="float: right;">共有 <?php echo $count; ?> 項商品</span>
-                                        </p>
-                                    </div>
-                                    <?php
-
-                                    if (!$hasProduct) {
-                                        ?>
-                                        <div class="ui bottom attached buttons">
-                                            <div class="ui grey bottom attached button"
-                                                 onclick="location.href='<?php echo "edit_category.php?id=" . $grandchild["id"]; ?>'">
-                                                編輯該類別
-                                            </div>
-                                            <div class="ui negative bottom attached button"
-                                                 onclick="location.href='<?php echo "delete_categories.php?id=" . $grandchild["id"]; ?>'">
-                                                刪除該類別
-                                            </div>
-                                        </div>
-
-                                        <?php
-                                    }
-
-                                    ?>
-
-
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                            <div class="ui grey bottom attached button"
-                                 onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
-                                編輯該類別
-                            </div>
-
-                            <?php
-                        }
-                        ?>
-                    </div>
-                    <div class="ui grey bottom attached button"
-                         onclick="location.href='<?php echo "edit_category.php?id=" . $child["id"]; ?>'">
-                        編輯該類別
-                    </div>
-                </div>
-
-                <?php
-                break;
-            default:
-                die("目錄深度太深。");
-        }
+        array_push($categories, array(
+            "name" => $row[1],
+            "id" => $row[0],
+            "parent" => $row[2],
+            "depth" => 0,
+            "children" => array()
+        ));
     }
 
+    function organize($id)
+    {
+        global $mysqli;
+        $result = $mysqli->query("SELECT * from categories WHERE parent = {$id}");
+        if ($result == false) {
+            return array();
+        }
+        $row_count = mysqli_num_rows($result);
+        $data = array();
+        for ($i = 0; $i < $row_count; $i++) {
+            $row = mysqli_fetch_row($result);
+
+            array_push($data, array(
+                "name" => $row[1],
+                "id" => $row[0],
+                "parent" => $row[2],
+                "depth" => 0,
+                "children" => array()
+            ));
+        }
+
+        return $data;
+    }
+
+    function recurseOnCategory(array &$category)
+    {
+        $category["children"] = organize($category["id"]);
+        $depth = 1;
+        foreach ($category["children"] as $key => &$value) {
+            $newDepth = recurseOnCategory($value) + 1;
+            if ($newDepth > $depth) {
+                $depth = $newDepth;
+            }
+        }
+
+        $category["depth"] = $depth;
+        return $depth;
+    }
+
+    foreach ($categories as &$category) {
+        recurseOnCategory($category);
+    }
+
+    unset($category);
+
+    ?>
+
+    <?php
+    print_r($categories);
+    ?>
+    <?php
+    function category_count($categoryID) {
+        include './../util/connect.php';
+
+        $stmt = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.products WHERE categories = ' . intval($categoryID));
+        $stmt -> bind_result($c);
+        $stmt -> execute();
+        $stmt -> fetch();
+
+        include './../util/close.php';
+
+        return $c;
+    }
+    ?>
+    <?php
+    // 先自己，再小孩
+    function render($depth, array $self) {
+        $catcount = category_count($self['id']);
+        ?>
+        <tr>
+            <?php
+            if ($depth > 0) {
+                ?>
+                <td colspan="<?=$depth?>"></td>
+                <?php
+            }
+            ?>
+            <td colspan="<?=(4 - $depth)?>"><?=$self['name']?></td>
+            <td><?=$catcount?></td>
+            <td>
+                <?php
+                if ($depth != 2 && $catcount == 0 || !empty($self['children'])) {
+                    ?>
+                    <a href="category_new.php?id=<?$self['id']?>">新增子分類</a>
+                    <?php
+                }
+                ?>
+                <a href="category_edit.php?id=<?$self['id']?>">編輯名稱</a>
+                <?php
+                if ($catcount == 0 && empty($self['children'])) {
+                    ?>
+                    <a href="category_delete.php?id=<?$self['id']?>">刪除分類</a>
+                    <?php
+                }
+                ?>
+            </td>
+        </tr>
+        <?php
+
+        if (!empty($self['children'])) {
+            foreach ($self['children'] as $child) {
+                render($depth + 1, $child);
+            }
+        }
+    }
+    ?>
+
+    <?php
+    foreach ($categories as $category) {
+        ?>
+        <table class="ui celled structured table">
+            <thead>
+            <tr>
+                <th colspan="4">名稱</th>
+                <th style="width: 25%;">產品數量</th>
+                <th style="width: 25%;">動作</th>
+            </tr>
+            <tr style="">
+                <th style="width: 12.5%;">第一層</th>
+                <th style="width: 12.5%;">第二層</th>
+                <th style="width: 12.5%;">第三層</th>
+                <th colspan="3" style="width: 62.5%;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            render(0, $category);
+            ?>
+            </tbody>
+        </table>
+        <?php
+    }
+    ?>
+
+    <?php
     include './../util/close.php';
     ?>
+</div>
 </body>
 </html>

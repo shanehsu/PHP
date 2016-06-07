@@ -21,8 +21,58 @@
             include 'util/flat_menu.php';
             ?>
         </div>
-
         <div class="thirteen wide column">
+            <?php
+            include("util/connect.php");
+
+            $current_cid = intval($_GET['id']);
+            $current_name = "";
+            $traversal = []; // 從空陣列開始
+            while (true) {
+                $stmt = $mysqli -> prepare('SELECT id, name, parent FROM group_12.categories WHERE id = ?');
+                $stmt -> bind_param('d', $current_cid);
+                $stmt -> bind_result($cid, $cname, $cparent);
+                $stmt -> execute();
+                $stmt -> fetch();
+
+                if ($current_name == "") $current_name = $cname;
+
+                // 儲存到陣列
+                array_unshift($traversal, [
+                    'id' => $cid,
+                    'name' => $cname
+                ]);
+
+                if (is_null($cparent)) {
+                    break;
+                } else {
+                    $current_cid = $cparent;
+                }
+                $stmt -> close();
+            }
+
+            include("util/close.php");
+            ?>
+
+            <h2 class="ui grey header">
+                <?=$current_name?>
+            </h2>
+            <div class="ui breadcrumb" style="padding-bottom: 2em; ">
+
+                <?php
+                $length = count($traversal);
+
+                for ($i = 0; $i < $length - 1; $i ++) {
+                    ?>
+                    <a class="section"><?=$traversal[$i]['name']?></a>
+                    <i class="right angle icon divider"></i>
+                    <?php
+                }
+                ?>
+
+                <div class="active section"><?=$traversal[$length - 1]['name']?></div>
+            </div>
+
             <div class="ui four doubling cards">
                 <?php
                 include("util/connect.php");
@@ -74,12 +124,6 @@
                             <div class="rating">
                                 <div class="ui star rating" data-rating="<?php echo $row[9]; ?>"
                                      data-max-rating="5"></div>
-                            </div>
-                        </div>
-                        <div class="extra content">
-                            <div class="recent">
-                                <i class="users icon"></i>
-                                近三天內有 XXX 人購買
                             </div>
                         </div>
                         <div class="cart-button <?php echo $inCart ? 'purchased' : '' ?>">

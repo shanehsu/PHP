@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>阿寯的美食天地</title>
+    <link rel="stylesheet" type="text/css" href="../semantic/semantic.css">
+    <link rel="stylesheet" type="text/css" href="../styles/style.css">
+    <script src="../scripts/jquery-2.2.2.js"></script>
+    <script src="../semantic/semantic.js"></script>
+    <style>
+        div.grid {
+            height: 100%;
+        }
+        .column {
+            max-width: 36em;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+
+<body>
+<div class="ui middle aligned center aligned grid ">
+    <div class="column">
+        <div class="ui negative icon message">
+            <i class="lock icon"></i>
+            <div class="content">
+                <div class="header">
+                    未登入
+                </div>
+                <p>您必須登入才能檢視這個畫面，請回到<a href="login.php">管理者登入</a>畫面重新登入。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.assign('/index.php')
+    }, 2000)
+</script>
+</body>
+
+</html>

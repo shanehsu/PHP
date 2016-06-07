@@ -1,3 +1,7 @@
+<?php
+include "AdminAuthenticationRequired.php";
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

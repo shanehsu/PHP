@@ -36,12 +36,62 @@
     <?php
     include 'navigation.php';
     ?>
+    <?php
+    include("util/connect.php");
+
+    $pid = intval($_GET['id']);
+    $stmt_p = $mysqli -> prepare('SELECT categories FROM group_12.products WHERE id = ?');
+    $stmt_p -> bind_param('d', $pid);
+    $stmt_p -> bind_result($current_cid);
+    $stmt_p -> execute();
+    $stmt_p -> fetch();
+    $stmt_p -> close();
+
+    $current_name = "";
+    $traversal = []; // 從空陣列開始
+    while (true) {
+        $stmt = $mysqli -> prepare('SELECT id, name, parent FROM group_12.categories WHERE id = ?');
+        $stmt -> bind_param('d', $current_cid);
+        $stmt -> bind_result($cid, $cname, $cparent);
+        $stmt -> execute();
+        $stmt -> fetch();
+
+        if ($current_name == "") $current_name = $cname;
+
+        // 儲存到陣列
+        array_unshift($traversal, [
+            'id' => $cid,
+            'name' => $cname
+        ]);
+
+        if (is_null($cparent)) {
+            break;
+        } else {
+            $current_cid = $cparent;
+        }
+        $stmt -> close();
+    }
+
+    include("util/close.php");
+    ?>
+
+    <h2 class="ui grey header">
+        <?=$current_name?>
+    </h2>
     <div class="ui breadcrumb">
-        <a class="section">總覽</a>
-        <i class="right angle icon divider"></i>
-        <a class="section">生鮮食品</a>
-        <i class="right angle icon divider"></i>
-        <div class="active section">蔬菜</div>
+
+        <?php
+        $length = count($traversal);
+
+        for ($i = 0; $i < $length - 1; $i ++) {
+            ?>
+            <a class="section"><?=$traversal[$i]['name']?></a>
+            <i class="right angle icon divider"></i>
+            <?php
+        }
+        ?>
+
+        <div class="active section"><?=$traversal[$length - 1]['name']?></div>
     </div>
     <!-- Product -->
     <div class="ui items">
@@ -60,6 +110,18 @@
             $bought[] = intval($bought_str_item);
         }
         $stmtc -> close();
+
+        // 近期購買
+        $stmtr = $mysqli -> prepare('SELECT SUM(quantity) 
+            FROM group_12.receipt, group_12.receipt_item, group_12.products
+            WHERE products.id = ? AND products.name = receipt_item.item_name AND receipt.id = receipt_item.receipt AND receipt.ordered >= DATE_ADD(CURDATE(), INTERVAL -3 DAY) ');
+        $pid = intval($_GET['id']);
+        $stmtr -> bind_param('d', $pid);
+        $stmtr -> bind_result($recent);
+        $stmtr -> execute();
+        $stmtr -> fetch();
+        $stmtr -> close();
+
         if (isset($_GET['id'])) {
             $result = $mysqli -> query("SELECT * FROM products WHERE id = " . intval($_GET['id']));
             $row = mysqli_fetch_row($result);
@@ -76,7 +138,7 @@
                 echo "<h1 class=\"ui header\">" . $row[1] . "</h1>
                             <div class=\"meta\">
                                 <div class=\"recent\" style=\"display: inline-block;\">
-                                    <i class=\"users icon\"></i>三天內共有 XXX 人購買
+                                    <i class=\"users icon\"></i>三天內共有 " . $recent .  " 人購買
                                 </div>
                                 <span class=\"price quantity separator\"></span>
                                 <div class=\"rating\" style=\"display: inline-block;\">
@@ -104,12 +166,10 @@
             <div class="ui right floated large statistics">
                 <div class="ui horizontal green statistic">
                     <div class="label">
-                        <span data-quantity-per-item="250" class="quantity per item"></span>
-                        <span class="gram unit" style="padding-right: 1em; "></span>
+                        <?=$row[2]?>
                     </div>
                     <div class="value">
-                        <span data-price-per-item="27" class="price per item"></span>
-                        <span class="dollar unit"></span>
+                        $ <?=$row[3]?>
                     </div>
                 </div>
             </div>
@@ -119,29 +179,54 @@
             ?>
         </div>
     </div>
-    <div id="image-carousel">
-        <div id="Glide" class="glide">
 
-            <div class="glide__arrows">
-                <button class="ui inverted blue circular icon button glide__arrow large prev" data-glide-dir="<"><i
-                        class="chevron left icon"></i></button>
-                <button class="ui inverted blue circular icon button glide__arrow large next" data-glide-dir=">"><i
-                        class="chevron right icon" style="margin: 0;"></i></button>
-            </div>
+    <?php
+    $pid = intval($_GET['id']);
+    $stmt_carousel = $mysqli -> prepare('SELECT image from group_12.product_carousel WHERE product = ?');
+    $stmt_carousel -> bind_param('d', $pid);
+    $stmt_carousel -> bind_result($image);
+    $stmt_carousel -> execute();
+    $images = [];
 
-            <div class="glide__wrapper">
-                <div class="glide__track">
-                    <img class="glide__slide" src="images/index-carousel/1.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/2.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/3.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/4.jpg"/>
-                    <img class="glide__slide" src="images/index-carousel/5.jpg"/>
+    while ($stmt_carousel -> fetch()) {
+        $images[] = 'images.php?id=' . $image;
+    }
+
+    if (count($images) > 0) {
+        ?>
+        <div id="image-carousel">
+            <div id="Glide" class="glide">
+
+                <div class="glide__arrows">
+                    <button class="ui inverted blue circular icon button glide__arrow large prev" data-glide-dir="<"><i
+                            class="chevron left icon"></i></button>
+                    <button class="ui inverted blue circular icon button glide__arrow large next" data-glide-dir=">"><i
+                            class="chevron right icon" style="margin: 0;"></i></button>
                 </div>
-            </div>
 
-            <div class="glide__bullets"></div>
+                <div class="glide__wrapper">
+                    <div class="glide__track">
+                        <?php
+                        foreach ($images as $imageURL) {
+                            ?>
+                            <img class="glide__slide" src="<?=$imageURL?>"/>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+
+                <div class="glide__bullets"></div>
+            </div>
         </div>
-    </div>
+        <?php
+    }
+
+    ?>
+    <?php
+    $stmt_carousel -> close();
+    ?>
+
     <div style="display: flex; align-items: stretch; margin-top: 3rem; ">
         <?php
         $ary = explode("\n", $row[6]);

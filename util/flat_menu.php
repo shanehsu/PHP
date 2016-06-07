@@ -1,4 +1,3 @@
-<pre>
 <?php
 include("connect.php");
 
@@ -71,7 +70,6 @@ if ($debug) {
 
 include("close.php");
 ?>
-</pre>
 
 <?php
 $column_style_classes = array(
@@ -124,7 +122,7 @@ $column_style_classes = array(
                                     <?php
                                     foreach ($child["children"] as $grandchild) {
                                         ?>
-                                        <a class="item"><?php echo $grandchild["name"]; ?></a>
+                                        <a href="category.php?id=<?php echo $grandchild["id"]; ?>" class="item"><?php echo $grandchild["name"]; ?></a>
                                         <?php
                                     }
                                     ?>

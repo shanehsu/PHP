@@ -41,6 +41,7 @@
                 <th>單價</th>
                 <th>數量</th>
                 <th>總價</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -48,9 +49,10 @@
         </table>
     </div>
     <div class="actions">
+        <div class="ui left floated red basic button" onclick="clearCart()">清空</div>
         <div id="cart-modal-update" class="approve ui green basic button" onclick="updateCart()">更新</div>
-        <div id="cart-modal-checkout" class="approve ui animated fade blue button">
-            <div class="visible content" onclick="checkout()">結帳</div>
+        <div id="cart-modal-checkout" onclick="checkout()" class="approve ui animated fade blue button">
+            <div class="visible content">結帳</div>
             <div class="hidden content">
                 <span class="dollar unit"></span>
                 <span class="price total" data-price-total=""></span>

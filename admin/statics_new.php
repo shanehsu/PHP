@@ -1,4 +1,8 @@
 <?php
+include "AdminAuthenticationRequired.php";
+?>
+
+<?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include("./../util/connect.php");
 
@@ -57,7 +61,7 @@
     </h1>
 
     <!-- 內容 -->
-    <form class="ui form" style="max-width: 20em; margin: 0 auto;" action="upload_file.php" method="POST" enctype="multipart/form-data">
+    <form class="ui form" style="max-width: 20em; margin: 0 auto;" action="statics_new.php" method="POST" enctype="multipart/form-data">
         <div class="field">
             <label>檔案</label>
             <!-- 檢查副檔名是否為 .jpg 或 .jpeg -->

@@ -1,4 +1,8 @@
 <?php
+include "AdminAuthenticationRequired.php";
+?>
+
+<?php
 if ($_SERVER["REQUEST_METHOD"] == 'POST') {
     // 修改！
     include './../util/connect.php';
