@@ -19,7 +19,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         $select_stmt = $mysqli -> prepare('SELECT id, name, parent from categories');
         $select_stmt -> bind_result($id, $name, $parent);
-        $select_stmt -> execute();
+
+        if (!$select_stmt -> execute()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'reason' => '無法從資料庫取得分類清單'
+            ]);
+
+            exit();
+        }
 
         $categories = [];
 
@@ -39,7 +48,17 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $stmt_aggr = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.products WHERE categories = ?');
             $stmt_aggr -> bind_param('d', $id);
             $stmt_aggr -> bind_result($count);
-            $stmt_aggr -> execute();
+
+            if (!$stmt_aggr -> execute()) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'reason' => '無法從資料庫取得分類嚇得產品數量'
+                ]);
+
+                exit();
+            }
+
             $stmt_aggr -> fetch();
             $stmt_aggr -> close();
 
@@ -51,7 +70,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
 
         header('Content-Type: application/json');
-        echo json_encode($categories);
+        echo json_encode([
+            'success' => true,
+            'results' => $categories
+        ]);
 
         include_once './../util/close.php';
 
@@ -63,7 +85,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         // 確認有 action
         if (!isset($body['action'])) {
-            throw new Exception('POST 主體缺乏動作種類（action）');
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'reason' => 'POST 主體缺乏動作種類（action）'
+            ]);
+
+            exit();
         }
 
         $action = $body['action'];
@@ -71,7 +99,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
         switch ($action) {
             case 'insert':
                 if (!isset($body['name'])) {
-                    throw new Exception('POST 主體缺乏新分類名稱（name）');
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'reason' => 'POST 主體缺乏新分類名稱（name）'
+                    ]);
+
+                    exit();
                 }
                 if (isset($body['parent'])) {
                     // 是一個子分類
@@ -89,7 +123,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                             'success' => true
                         ]);
                     } else {
-                        throw new Exception('資料庫插入失敗');
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => false,
+                            'reason' => '資料庫插入失敗'
+                        ]);
+
+                        exit();
                     }
 
                     include_once './../util/close.php';
@@ -108,7 +148,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                             'success' => true
                         ]);
                     } else {
-                        throw new Exception('資料庫插入失敗');
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => false,
+                            'reason' => '資料庫插入失敗'
+                        ]);
+
+                        exit();
                     }
 
                     include_once './../util/close.php';
@@ -116,7 +162,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
             case 'delete':
                 if (!isset($body['id'])) {
-                    throw new Exception('POST 主體缺乏要被刪除的分類 ID（id）');
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'reason' => 'POST 主體缺乏要被刪除的分類 ID（id）'
+                    ]);
+
+                    exit();
                 }
 
                 $id = intval($body['id']);
@@ -132,7 +184,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                         'success' => true
                     ]);
                 } else {
-                    throw new Exception('資料庫刪除失敗');
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'reason' => '資料庫刪除失敗'
+                    ]);
+
+                    exit();
                 }
 
                 include_once './../util/close.php';
@@ -140,10 +198,22 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
             case 'edit':
                 if (!isset($body['id'])) {
-                    throw new Exception('POST 主體缺乏新的分類 ID（id）');
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'reason' => 'POST 主體缺乏新的分類 ID（id）'
+                    ]);
+
+                    exit();
                 }
                 if (!isset($body['name'])) {
-                    throw new Exception('POST 主體缺乏新的分類名稱（name）');
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'reason' => 'POST 主體缺乏新的分類名稱（name）'
+                    ]);
+
+                    exit();
                 }
 
                 $id = intval($body['id']);
@@ -160,16 +230,34 @@ switch ($_SERVER['REQUEST_METHOD']) {
                         'success' => true
                     ]);
                 } else {
-                    throw new Exception('資料庫更新失敗');
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'reason' => '資料庫更新失敗'
+                    ]);
+
+                    exit();
                 }
 
                 include_once './../util/close.php';
 
                 break;
             default:
-                throw new Exception('伺服器不認識的動作');
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'reason' => '伺服器不認識的動作'
+                ]);
+
+                exit();
         }
         break;
     default:
-        throw new Exception("僅支援 GET 或是 POST");
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'reason' => '僅支援 GET 或是 POST'
+        ]);
+
+        exit();
 }

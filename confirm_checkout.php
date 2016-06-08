@@ -5,8 +5,6 @@ include 'util/UserAuthenticationRequired.php';
 <?php
 $shipping = $_POST['shipping_address'];
 $recv = $_POST['recipient'];
-
-
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +37,21 @@ $recv = $_POST['recipient'];
     
     <?php
     include 'util/connect.php';
+    // 檢查訂單是否有項目
+    $stmt = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.cart WHERE member = ?');
+    $stmt -> bind_param('d', $uid);
+    $stmt -> bind_result($cartItemCount);
+    $stmt -> execute();
+    $stmt -> fetch();
+    $stmt -> close();
+
+    if ($cartItemCount == 0) {
+        echo '<script>alert("購物車裡面沒有東西");';
+        echo 'window.location.assign("checkout.php");</script>';
+
+        exit();
+    }
+
     // 建立新的 Receipt
     
     $stmt = $mysqli -> prepare('INSERT INTO group_12.receipt(member, recipient, shipping_address) VALUES (?, ?, ?)');

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST["name"];
     $address = $_POST["address"];
 
-    if($email != "" && $phone != "" && $name != "" && $address != "") {
+    if($email == "" || $phone == "" || $name == "" || $address == "") {
         // 也算是失敗
 
         ?>

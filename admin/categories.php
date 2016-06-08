@@ -13,14 +13,56 @@ include "AdminAuthenticationRequired.php";
     <script src="../semantic/semantic.js"></script>
 
     <style>
-        td.actions > a {
-            min-width: 5em;
-        }
-        td.actions > a:not(:first-child) {
-            border-left: 2px solid #a333c8;
-            padding-left: 4px;
-        }
     </style>
+
+    <script>
+        // 載入資料
+        function load() {
+            $.get('category_ajax.php').then(function(response) {
+                // 伺服器回傳資料，檢查是否成功
+                if (response['success']) {
+                    return response['results']
+                } else {
+                    return $.Deferred().reject(response['reason'])
+                }
+            }).then(function(results) {
+                console.dir(results)
+            }).fail(function(reason) {
+                console.error(reason)
+                $('#load-error-modal').modal('show');
+            })
+        }
+
+        $(function() {
+            // 設定無法載入資料時
+            // 所顯示的 Modal
+            $('#load-error-modal').modal({
+                // 使用者一定要按其中兩個按鈕，才能夠繼續
+                closable: false,
+
+                // 只是好像很好玩而已
+                transition: 'drop',
+
+                // 因為使用 basic 樣式會變得很奇怪，
+                // 所以關掉
+                // blurring: true,
+
+                // 按下重新載入的 Callback
+                onApprove: function() {
+                    // 再一次試圖載入
+                    load()
+                },
+
+                // 按下取消的 Callback
+                onDeny: function() {
+                    // 應該在表格顯示畫面
+                }
+
+            })
+
+            load();
+        })
+    </script>
 </head>
 <body>
 <div class="ui container">
@@ -34,196 +76,33 @@ include "AdminAuthenticationRequired.php";
         分類
     </h1>
 
-    <?php
-    include './../util/connect.php';
-    ?>
-
-    <?php
-    function category_count($categoryID) {
-        global $mysqli;
-        $stmt = $mysqli -> prepare('SELECT COUNT(*) FROM group_12.products WHERE categories = ' . intval($categoryID));
-        $stmt -> bind_result($c);
-        $stmt -> execute();
-        $stmt -> fetch();
-
-        if (is_null($c) || !isset($c)){
-            $c = 0;
-        }
-
-        return $c;
-    }
-    ?>
-
-    <?php
-    $result = $mysqli->query("SELECT * FROM categories WHERE parent IS NULL");
-    $total = mysqli_num_rows($result);
-    $categories = array();
-
-    for ($i = 0; $i < $total; $i++) {
-        $row = mysqli_fetch_row($result);
-
-        array_push($categories, array(
-            "name" => $row[1],
-            "id" => $row[0],
-            "parent" => $row[2],
-            "depth" => 0,
-            "children" => array()
-        ));
-    }
-
-    mysqli_free_result($result);
-
-    foreach ($categories as &$category) {
-        echo 'Iterating ' . $category['name'] . '<br/>';
-        $id = $category['id'];
-        $category['item'] = category_count($id);
-        $category['siblingHasItems'] = false;
-    }
-
-    unset($category);
-
-    function organize($id)
-    {
-        global $mysqli;
-        $result = $mysqli->query("SELECT * from categories WHERE parent = {$id}");
-        if ($result == false) {
-            return array();
-        }
-        $row_count = mysqli_num_rows($result);
-        $data = array();
-        for ($i = 0; $i < $row_count; $i++) {
-            $row = mysqli_fetch_row($result);
-
-            array_push($data, array(
-                "name" => $row[1],
-                "id" => $row[0],
-                "parent" => $row[2],
-                "depth" => 0,
-                "children" => array()
-            ));
-        }
-        mysqli_free_result($result);
-
-        $someHasItems = false;
-
-        foreach ($data as &$category) {
-            $id = $category['id'];
-            $category['item'] = category_count($id);
-
-            if ($category['item'] > 0) {
-                $someHasItems = true;
-            }
-        }
-
-        foreach ($data as &$category) {
-            $category['siblingHasItems'] = $someHasItems;
-        }
-
-        unset($category);
-
-        return $data;
-    }
-
-    function recurseOnCategory(array &$category)
-    {
-        $category["children"] = organize($category["id"]);
-        $depth = 1;
-        foreach ($category["children"] as $key => &$value) {
-            $newDepth = recurseOnCategory($value) + 1;
-            if ($newDepth > $depth) {
-                $depth = $newDepth;
-            }
-        }
-
-        $category["depth"] = $depth;
-        return $depth;
-    }
-
-    foreach ($categories as &$category) {
-        recurseOnCategory($category);
-    }
-
-    unset($category);
-
-    ?>
-    <pre>
-    <?php
-    print_r(json_encode($categories, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-    ?>
-    </pre>
-
-    <?php
-    // 先自己，再小孩
-    function render($depth, array $self) {
-        ?>
-        <tr>
-            <?php
-            if ($depth > 0) {
-                ?>
-                <td colspan="<?=$depth?>"></td>
-                <?php
-            }
-            ?>
-            <td colspan="<?=(3 - $depth)?>"><?=$self['name']?></td>
-            <td><?=$self['item']?></td>
-            <td class="actions">
-                <?php
-                if ($depth != 2 && $self['item'] == 0 || !empty($self['children'])) {
-                    ?>
-                    <a href="category_new.php?id=<?=$self['id']?>">新增子分類</a>
-                    <?php
-                }
-                ?>
-                <a href="category_edit.php?id=<?=$self['id']?>">編輯名稱</a>
-                <?php
-                if ($self['item'] == 0 && empty($self['children']) && !$self['siblingHasItems']) {
-                    ?>
-                    <a href="category_delete.php?id=<?=$self['id']?>">刪除分類</a>
-                    <?php
-                }
-                ?>
-            </td>
-        </tr>
-        <?php
-
-        if (!empty($self['children'])) {
-            foreach ($self['children'] as $child) {
-                render($depth + 1, $child);
-            }
-        }
-    }
-    ?>
-
-    <?php
-    foreach ($categories as $category) {
-        ?>
+    <div class="basic ui segment">
         <table class="ui celled structured table">
-            <thead>
+            <thead id="header">
             <tr>
-                <th colspan="3">名稱</th>
+                <th colspan="3" style="width: 45%">名稱</th>
                 <th style="width: 25%;">產品數量</th>
-                <th style="width: 25%;">動作</th>
-            </tr>
-            <tr style="">
-                <th style="width: 12.5%;">第一層</th>
-                <th style="width: 12.5%;">第二層</th>
-                <th style="width: 12.5%;">第三層</th>
-                <th colspan="3" style="width: 62.5%;"></th>
+                <th style="width: 30%;">動作</th>
             </tr>
             </thead>
-            <tbody>
-            <?php
-            render(0, $category);
-            ?>
+            <tbody id="content">
             </tbody>
         </table>
-        <?php
-    }
-    ?>
+    </div>
+</div>
 
-    <?php
-    include './../util/close.php';
-    ?>
+<div id="load-error-modal" class="ui basic small modal">
+    <h2 class="ui red icon header">
+        <i class="warning icon"></i>
+        <div style="padding-left: 0;" class="content">錯誤</div>
+    </h2>
+    <div class="centered content">
+        <p>載入資料時發生錯誤，是否重新載入？</p>
+    </div>
+    <div class="actions">
+        <div style="color: black;" class="ui yellow cancel button">取消</div>
+        <div class="ui blue approve button">重新載入</div>
+    </div>
 </div>
 </body>
 </html>

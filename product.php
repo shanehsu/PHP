@@ -252,7 +252,8 @@
             // 載入評論
             $stmt = $mysqli -> prepare('SELECT group_12.comments.comment, group_12.comments.rating, group_12.comments.date, group_12.member.name
                 FROM group_12.comments, group_12.member
-                WHERE group_12.comments.product = ? AND group_12.comments.member = group_12.member.id');
+                WHERE group_12.comments.product = ? AND group_12.comments.member = group_12.member.id
+                ORDER BY comments.id DESC LIMIT 0, 6');
 
             $pid = intval($_GET['id']);
             $stmt -> bind_param('d', $pid);
@@ -260,7 +261,6 @@
             $stmt -> execute();
 
             while ($stmt -> fetch()) {
-                echo 'some comment here!';
                 ?>
                 <div class="comment">
                     <div class="content">
@@ -275,6 +275,9 @@
                             <p>
                                 <?php
                                 $lines = explode("\n", $comment);
+                                foreach ($lines as &$line) {
+                                    $line = htmlspecialchars($line);
+                                }
                                 echo implode("</p><p>", $lines);
                                 ?>
                             </p>

@@ -7,7 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include("./../util/connect.php");
     // date_default_timezone_set('Asia/Taipei');
     if (isset($_POST['title'])) {
-        $sql="insert into posts (title, related_product) values ('" . $_POST['title'] . "','" . $_POST['related_product']. "')";
+        if ($_POST['related_product']) {
+            $sql="insert into posts (title, related_product) values ('" . $_POST['title'] . "','" . $_POST['related_product']. "')";
+        } else {
+            $sql="insert into posts (title, related_product) values ('" . $_POST['title'] . "', NULL)";
+        }
+
         if (mysqli_query($mysqli, $sql)) {
             header('Location: posts.php');
         } else {

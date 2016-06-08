@@ -120,7 +120,7 @@ include 'util/UserAuthenticationRequired.php';
                 <label>送貨地址</label>
                 <input type="text" name="shipping_address" placeholder="">
             </div>
-            <button type="submit" class="ui green right floated button">確認訂購</button>
+            <button type="submit" class="ui green right floated button" <?php echo $total == 0 ? 'disabled' : '' ?>>確認訂購</button>
             <br/>
             <br/>
             <div class="ui error message"></div>
