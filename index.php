@@ -77,57 +77,30 @@
             <div class="ui very padded red raised segment">
                 <h2 class="ui red header">特惠商品</h2>
                 <div class="ui items">
-                    <div class="item">
-                        <div class="ui small image">
-                            <img src="images/004.jpg">
-                        </div>
-                        <div class="middle aligned content">
-                            <a class="header">芥藍菜</a>
-                            <div class="meta">
-                                <span>於臺灣雲林生產，附有產銷履歷。</span>
+                    <?php
+                    include 'util/connect.php';
+
+                    $stmt = $mysqli -> prepare('SELECT id, name, thumbnail, description FROM products ORDER BY RAND() DESC LIMIT 0, 5');
+                    $stmt -> bind_result($id, $name, $thumbnail, $description);
+                    $stmt -> execute();
+                    while ($stmt -> fetch()) {
+                        ?>
+                        <div class="item">
+                            <div class="ui small image">
+                                <img src="images.php?id=<?=$thumbnail?>">
                             </div>
-                            <div class="description">
-                                <p>我是完整敘述的前幾個字喔。</p>
-                            </div>
-                            <div class="extra">
-                                Additional Details
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="ui small image">
-                            <img src="images/003.jpg">
-                        </div>
-                        <div class="middle aligned content">
-                            <a class="header">菠菜</a>
-                            <div class="meta">
-                                <span>於臺灣雲林生產，附有產銷履歷。</span>
-                            </div>
-                            <div class="description">
-                                <p>我是完整敘述的前幾個字喔。</p>
-                            </div>
-                            <div class="extra">
-                                Additional Details
+                            <div class="middle aligned content">
+                                <a href="product.php?id=<?=$id?>" class="header"><?=$name?></a>
+                                <div class="description">
+                                    <p><?=$description?></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="ui small image">
-                            <img src="images/008.jpg">
-                        </div>
-                        <div class="middle aligned content">
-                            <a class="header">A 菜</a>
-                            <div class="meta">
-                                <span>於臺灣雲林生產，附有產銷履歷。</span>
-                            </div>
-                            <div class="description">
-                                <p>我是完整敘述的前幾個字喔。</p>
-                            </div>
-                            <div class="extra">
-                                Additional Details
-                            </div>
-                        </div>
-                    </div>
+                        <?php
+                    }
+
+                    include 'util/close.php';
+                    ?>
                 </div>
             </div>
             <div class="ui very padded blue segment">
@@ -135,7 +108,7 @@
                 <div class="ui relaxed divided list">
                     <?php
                     include("util/connect.php");
-                    $result = $mysqli->query("SELECT * FROM posts");
+                    $result = $mysqli->query("SELECT * FROM posts ORDER BY id DESC LIMIT 0, 5");
                     $total = mysqli_num_rows($result);
                     for ($i = 0; $i < $total; $i++) {
                         $row = mysqli_fetch_row($result);
@@ -157,45 +130,63 @@
         <div class="ui padded yellow segment">
             <h2 class="ui yellow header">熱門商品</h2>
             <div class="ui items">
-                <div class="item">
-                    <div class="ui small image">
-                        <img src="images/004.jpg">
+                <?php
+                include 'util/connect.php';
+
+                $stmt = $mysqli -> prepare('SELECT products.id, products.name, products.thumbnail, products.description
+                    FROM group_12.products, group_12.receipt_item
+                    WHERE products.id = receipt_item.item_id
+                    ORDER BY receipt_item.id DESC
+                    LIMIT 0, 5');
+                $stmt -> bind_result($id, $name, $thumbnail, $description);
+                $stmt -> execute();
+                while ($stmt -> fetch()) {
+                    ?>
+                    <div class="item">
+                        <div class="ui small image">
+                            <img src="images.php?id=<?=$thumbnail?>">
+                        </div>
+                        <div class="middle aligned content">
+                            <a href="product.php?id=<?=$id?>" class="header"><?=$name?></a>
+                            <div class="description">
+                                <p><?=$description?></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="middle aligned content">
-                        <a class="header">芥藍菜</a>
-                        <div class="meta">
-                            <span>於臺灣雲林生產，附有產銷履歷。</span>
-                        </div>
-                        <div class="description">
-                            <p>我是完整敘述的前幾個字喔。</p>
-                        </div>
-                        <div class="extra">
-                            Additional Details
-                        </div>
-                    </div>
-                </div>
+                    <?php
+                }
+
+                include 'util/close.php';
+                ?>
             </div>
         </div>
         <div class="ui padded teal segment">
             <h2 class="ui teal header">近期上架</h2>
             <div class="ui items">
-                <div class="item">
-                    <div class="ui small image">
-                        <img src="images/004.jpg">
+                <?php
+                include 'util/connect.php';
+
+                $stmt = $mysqli -> prepare('SELECT id, name, thumbnail, description FROM products ORDER BY id DESC LIMIT 0, 5');
+                $stmt -> bind_result($id, $name, $thumbnail, $description);
+                $stmt -> execute();
+                while ($stmt -> fetch()) {
+                    ?>
+                    <div class="item">
+                        <div class="ui small image">
+                            <img src="images.php?id=<?=$thumbnail?>">
+                        </div>
+                        <div class="middle aligned content">
+                            <a href="product.php?id=<?=$id?>" class="header"><?=$name?></a>
+                            <div class="description">
+                                <p><?=$description?></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="middle aligned content">
-                        <a class="header">芥藍菜</a>
-                        <div class="meta">
-                            <span>於臺灣雲林生產，附有產銷履歷。</span>
-                        </div>
-                        <div class="description">
-                            <p>我是完整敘述的前幾個字喔。</p>
-                        </div>
-                        <div class="extra">
-                            Additional Details
-                        </div>
-                    </div>
-                </div>
+                    <?php
+                }
+
+                include 'util/close.php';
+                ?>
             </div>
         </div>
     </div>

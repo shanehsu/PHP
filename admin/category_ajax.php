@@ -12,6 +12,9 @@ include 'AdminAuthenticationRequired.php';
 // header('Content-Type: application/json');
 // echo json_encode($result);
 
+// Mock Delay for 3 Seconds
+sleep(3);
+
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         // 取得所有分類
