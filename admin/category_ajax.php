@@ -13,7 +13,7 @@ include 'AdminAuthenticationRequired.php';
 // echo json_encode($result);
 
 // Mock Delay for 3 Seconds
-sleep(3);
+// sleep(3);
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':

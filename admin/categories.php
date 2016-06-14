@@ -25,6 +25,11 @@ include "AdminAuthenticationRequired.php";
             }
         }
         // 載入資料
+        function newRoot() {
+            var modal = $('#add-or-edit-category-modal')
+            modal.data().operation = 'add'
+            modal.modal('show')
+        }
         function load() {
             return new Promise(function(resolve, reject) {
                 $('#segment').addClass('loading')
@@ -193,7 +198,34 @@ include "AdminAuthenticationRequired.php";
                             }
                             break
                         case 'edit':
-                            alert('TODO: edit with AJAX')
+                            if (host.find('input').val() == '') {
+                                $('#operation-failed-modal').data().message = '請輸入新分類名稱'
+                                $('#operation-failed-modal').modal('show')
+                            } else {
+                                var id = host.data().id
+                                var payload = {
+                                    action: 'edit',
+                                    name: host.find('input').val(),
+                                    id: id
+                                }
+                                $.ajax({
+                                    url: 'category_ajax.php',
+                                    method: 'POST',
+                                    data: JSON.stringify(payload),
+                                    contentType: 'application/json; charset=utf-8',
+                                    beforeSend: function() {
+                                        host.find('div.approve').addClass('loading')
+                                    }
+                                }).then(defaultResponseParser).then(function() {
+                                    load().then(function() {
+                                        host.find('div.approve').removeClass('loading')
+                                        host.modal('hide')
+                                        $('#operation-success-modal').modal('show')
+                                    })
+                                }).fail(function() {
+                                    $('#operation-failed-modal').modal('show')
+                                })
+                            }
                             break
                     }
 
@@ -282,6 +314,13 @@ include "AdminAuthenticationRequired.php";
             </thead>
             <tbody id="content">
             </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="5">
+                    <div class="ui blue button" onclick="newRoot()">新增</div>
+                </th>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </div>
