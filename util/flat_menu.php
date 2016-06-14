@@ -77,7 +77,7 @@ $column_style_classes = array(
 );
 ?>
 
-<div class="ui secondary fluid vertical menu" style="max-width: 30rem;">
+<div class="ui secondary fluid vertical menu" style="min-width: 15rem; max-width: 30rem;">
     <?php
     foreach ($categories as $category) {
         switch ($category["depth"]) {
