@@ -69,7 +69,7 @@ if ($debug) {
 }
 
 include("close.php");
-?>/;,
+?>
 
 <div class="ui vertical menu" style="min-width: 15rem; max-width: 30rem;">
     <?php
